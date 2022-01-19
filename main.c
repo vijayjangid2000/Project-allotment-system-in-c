@@ -2,6 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <windows.h>
+#include<conio.h>
+#include<ctype.h>
 
 const int PROJECT_STATUS_IDLE = 1;
 const int PROJECT_STATUS_COMPLETED = 2;
@@ -140,6 +143,7 @@ void updateProjectFile() {
                 ALL_PROJECT_ARRAY[i].managerId, ALL_PROJECT_ARRAY[i].minExperience,
                 ALL_PROJECT_ARRAY[i].minExpEmpNum, ALL_PROJECT_ARRAY[i].isBilled,
                 ALL_PROJECT_ARRAY[i].domainExpertId, ALL_PROJECT_ARRAY[i].clientId);
+
     }
 
     fclose(projectFile);
@@ -461,7 +465,7 @@ void allotEmployeeToProject(struct Project chosenProject) {
             dev = numOfEmpNeeded - (2 * ba),
             tester = ba;
 
-    printf("\nAllotment Work BA %d Dev %d Tester %d", ba, dev, tester);
+    printf("\nAllotment Work: ", ba, dev, tester);
 
     struct Employee selectedEmployees[numOfEmpNeeded];
     int indexEmp = 0;
@@ -480,7 +484,7 @@ void allotEmployeeToProject(struct Project chosenProject) {
     if (tempNumOfEmpFree >= numOfEmpNeeded) haveRequiredEmployees = true;
 
     if (!haveRequiredEmployees) {
-        printf("We don't have required number of employees for this project, "
+        printf("\nWe don't have required number of employees for this project, "
                "Please Choose another Project");
         return;
     }
@@ -537,12 +541,12 @@ void allotEmployeeToProject(struct Project chosenProject) {
     }
 
     if (!haveExperienced) {
-        printf("We don't have experienced people for this project, Please choose another project");
+        printf("\nWe don't have experienced people for this project, Please choose another project");
         return;
     }
 
     if (!haveDomainPerson) {
-        printf("We don't have domain expert for this project, Please choose another project");
+        printf("\nWe don't have domain expert for this project, Please choose another project");
         return;
     }
 
@@ -605,16 +609,16 @@ void allotEmployeeToProject(struct Project chosenProject) {
     }
 
     // Now update all data in the file
-    /* updateEmployeeFile();
-     updateProjectFile();
-     updateMemberFile();*/
+    updateEmployeeFile();
+    updateProjectFile();
+    updateMemberFile();
 
     // Show Message on console
-    printf("We have allotted the required Employees to the project");
+    printf("\nWe have allotted the required Employees to the project");
 
     // print the projects selected
 
-    printf("Project Details: \n");
+    printf("\nProject Details: \n");
     printf(FORMAT_PROJECT,
            chosenProject.id, chosenProject.name, chosenProject.status, chosenProject.deadLine,
            chosenProject.description,
@@ -625,7 +629,7 @@ void allotEmployeeToProject(struct Project chosenProject) {
 
     // print selected employees
 
-    printf("Allotted Employees Details\n");
+    printf("\nAllotted Employees Details\n");
     for (int i = 0; i < numOfEmpNeeded; ++i) {
         struct Employee emp1 = selectedEmployees[i];
         printf(FORMAT_EMPLOYEE,
@@ -637,9 +641,430 @@ void allotEmployeeToProject(struct Project chosenProject) {
 
 }
 
-int main() {
-    initializeApp();
-    allotEmployeeToProject(ALL_PROJECT_ARRAY[0]);
+/* Rishabh Task */
+
+int isNumericString(char str[]) {
+    int flag = 1, i = 0;
+    while (i < strlen(str)) {
+        if (isalpha(str[i])) {
+            flag = 0;
+            break;
+        } else {
+            i = i + 1;
+        }
+    }
+    if (flag == 1) {
+        return 1;
+    } else {
+        return 0;
+    }
+};
+
+int mailValidation(char mailid[]) {
+    int i, p1, p2;
+    p1 = p2 = 0;
+    for (i = 0; mailid[i] != '\0'; i++) {
+        if (mailid[i] == '@')
+            p1 = i;
+        else if (mailid[i] == '.')
+            p2 = i;
+    }
+    if (p1 >= 1 && (p2 - p1) >= 1)
+        return 1;
+    else
+        return 0;
+}
+
+int generateID() {
+    FILE *f;
+    int temp = 0;
+    char datatoread[1000];
+    f = fopen("data1.txt", "r");
+    char *token;
+    fgets(datatoread, 500, f);
+    while (fgets(datatoread, 500, f) != NULL) {
+        token = strtok(datatoread, "|");
+        temp = atoi(token);
+    }
+    fclose(f);
+    return temp + 1;
+}
+
+int getSystemDate() {
+    char str[100];
+    int result = 0;
+    SYSTEMTIME s;
+    GetSystemTime(&s);
+    if (s.wMonth < 10) {
+        int i = s.wYear, j = s.wMonth, k = s.wDay;
+        sprintf(str, "%d0%d%d", i, j, k);
+        result = strtol(str, NULL, 10);
+
+    } else {
+        int i = s.wYear, j = s.wMonth, k = s.wDay;
+        sprintf(str, "%d%d%d", i, j, k);
+        result = strtol(str, NULL, 10);
+    }
+    return result;
+}
+
+int dateValidation(char ch[]) {
+    int date[3], i = 0, dd, mm, yyyy;
+    char *token;
+    SYSTEMTIME s;
+    GetSystemTime(&s);
+    token = strtok(ch, "-");\
+    while (token != NULL) {
+        date[i] = atoi(token);
+        i = i + 1;
+        token = strtok(NULL, "-");
+    }
+    dd = date[2];
+    mm = date[1];
+    yyyy = date[0];
+    if (yyyy < s.wYear)
+        return 1;
+        //printf("Valid Allotment date");
+
+    else if (yyyy > s.wYear)
+        return 0;
+    //printf("Invalid Allotment Date");
+
+    if (yyyy == s.wYear) {
+        if (mm > s.wMonth)
+            return 0;
+            //printf("Valid Allotment date");
+        else if (mm < s.wMonth)
+            return 1;
+            //printf("Invalid Allotment Date");
+        else if (dd < s.wDay)
+            return 1;
+            //printf("Valid Allotment date");
+        else if (dd > s.wDay)
+            return 0;
+            //printf("Invalid Allotment Date");
+        else
+            return 1;
+        //printf("Same date");
+    }
+}
+
+void addNewEmployee() {
+
+    struct Employee newEmp;
+
+    int operation = 1;
+
+    retake:
+    switch (operation) {
+
+        case 1:
+            printf("\nEnter Name: ");
+            gets(newEmp.name);
+            operation++;
+            break;
+
+        case 2:
+            printf("\nEnter Joining Date (yyyyMMdd): ");
+            gets(newEmp.joiningDate);
+            if (atoi(newEmp.joiningDate) <= getSystemDate() && strlen(newEmp.joiningDate) == 8) {
+                operation++;
+            } else {
+                printf("Enter Valid Date");
+            }
+            break;
+
+        case 3:
+            printf("\nEnter Designation[1- Manager, 2- Admin, 3- Worker]: ");
+            scanf(" %d", &newEmp.designation);
+            getchar();
+            operation++;
+            break;
+
+        case 4:
+            printf("\nEnter Email: ");
+            gets(newEmp.email);
+            if (mailValidation(newEmp.email) == 1) {
+                operation++;
+            } else {
+                printf("Enter valid email address");
+            }
+            break;
+
+        case 5:
+            printf("\nEnter Manager Id: ");
+            scanf(" %d", &newEmp.managerId);
+            getchar();
+            operation++;
+            break;
+
+        case 6:
+            printf("\nEnter Date Of Birth(yyyyMMdd): ");
+            gets(newEmp.dob);
+            if (atoi(newEmp.dob) <= getSystemDate() && strlen(newEmp.dob) == 8) {
+                operation++;
+            } else {
+                printf("Enter Valid Date");
+            }
+            break;
+
+        case 7:
+            printf("\nEnter Previous Experience (in years): ");
+            scanf(" %d", &newEmp.prevExperience);
+            getchar();
+            operation++;
+            break;
+
+        case 8:
+            printf("\nChoose Expertise in domain[1- finance, 2 - banking, 3 - dataScience, 4 - healthcare, 5 - education]: ");
+            scanf(" %d", &newEmp.domainExpert);
+            getchar();
+            operation++;
+            break;
+    }
+
+    if (operation <= 8)goto retake;
+    newEmp.id = generateID();
+    FILE *f;
+    printf("Are You Sure?[y/n]:");
+    if (getchar() == 'y') {
+        f = fopen("data1.txt", "a");
+        fprintf(f, "\n%d|%s|%s|%d|%s|%s|%d|%d|%s|%d|%s", newEmp.id, newEmp.name, newEmp.joiningDate, newEmp.designation,
+                newEmp.email, newEmp.mobile, newEmp.managerId, 0, newEmp.dob, newEmp.prevExperience,
+                newEmp.domainExpert);
+        fclose(f);
+    }
+}
+
+void addProjectTask() {
+
+}
+
+/* Bhavya Task */
+
+typedef struct project {
+    int id;
+    char name[100];
+    int status;
+    char *deadLine;
+    char description[200];
+    char *createdOn;
+    int numOfEmpNeeded;
+    int managerId;
+    int minExperience;
+    int minExpEmpNum;
+    int isBilled;
+    char *domainExpReq;
+    int clientId;
+} project;
+
+struct client {
+    int clientId;
+    char personName[100];
+    int id;
+    char companyName[30];
+    char contactMob[11];
+    char contactEmail[30];
+};
+
+bool isEmailValid(char mailid[]) {
+
+    int i, p1, p2;
+    p1 = p2 = 0;
+    for (i = 0; mailid[i] != '\0'; i++) {
+        if (mailid[i] == '@')
+            p1 = i;
+        else if (mailid[i] == '.')
+            p2 = i;
+    }
+    if (p1 > 3 && (p2 - p1) > 3)
+        return true;
+    else
+        return false;
+
+}
+
+int getSystemDateB() {
+    char str[100];
+    int result = 0;
+    SYSTEMTIME s;
+    GetSystemTime(&s);
+    if (s.wMonth < 10) {
+        int i = s.wYear, j = s.wMonth, k = s.wDay;
+        sprintf(str, "%d0%d%d", i, j, k);
+        result = strtol(str, NULL, 10);
+
+    } else {
+        int i = s.wYear, j = s.wMonth, k = s.wDay;
+        sprintf(str, "%d%d%d", i, j, k);
+        result = strtol(str, NULL, 10);
+    }
+    return result;
+}
+
+int generateIDB(char filepath[]) {
+    FILE *f;
+    int temp = 0;
+    char dataToRead[1000];
+    f = fopen(filepath, "r");
+    char *token;
+    //fgets(dataToRead,500,f);
+    while (fgets(dataToRead, 1000, f) != NULL) {
+        token = strtok(dataToRead, "|");
+        temp = atoi(token);
+    }
+    fclose(f);
+    return temp + 1;
+}
+
+int takeDataOfClient(int id) {
+    struct client c;
+    char email[100];
+    char filepath[100] = "client.txt";
+    FILE *f2;
+    f2 = fopen(filepath, "a");
+    c.clientId = generateID(filepath);
+    fflush(stdin);
+    printf("\nClient's Name:");
+    gets(c.personName);
+    c.id = id;
+    printf("\nClient's Company:");
+    gets(c.companyName);
+    printf("\nEnter the contact details of client.");
+    printf("\nMobile Number:");
+    scanf("%s", &c.contactMob);
+    while (1) {
+        if (strlen(c.contactMob) == 10 && isNumericString(c.contactMob) == 1) {
+            printf("                                                            ");
+            break;
+        } else {
+            printf("\nMobile Number:");
+            scanf("%s", &c.contactMob);
+        }
+    }
+    printf("\nEmail:");
+    scanf("%s", &email);
+    while (1) {
+        if (isEmailValid(email)) {
+            strcpy(c.contactEmail, email);
+            break;
+        } else {
+            printf("(Invalid Email)");
+            printf("\nEmail:");
+            scanf("%s", &email);
+
+        }
+    }
+    fprintf(f2, "\n%d|%s|%d|%s|%s|%s  ", c.clientId, c.personName, c.id, c.companyName, c.contactMob, c.contactEmail);
+    fclose(f2);
+    return c.clientId;
+}
+
+void takeDataFromUser() {
+    int deadline, created;
+    project *p;
+    FILE *f1;
+    int n, i, number;
+    char filepath[100] = "addproject.txt";
+    printf("How many projects you want to enter?");
+    scanf("%d", &n);
+    p = (project *) calloc(n, sizeof(project));
+
+    for (i = 0; i < n; i++) {
+        p[i].id = generateIDB(filepath);
+        fflush(stdin);
+        printf("\nProject Name:");
+        gets(p[i].name);
+
+        p[i].status = 1;
+
+        fflush(stdin);
+        printf("\nDescription:");
+        gets(p[i].description);
+
+        fflush(stdin);
+        created = getSystemDate();
+        char s[100];
+        sprintf(s, "%d", created);
+        p[i].createdOn = s;
+
+        fflush(stdin);
+        printf("\nDeadline:");
+        scanf("%d", &deadline);
+
+        while (1) {
+            if (created < deadline) {
+                char s1[10];
+                sprintf(s1, "%d", deadline);
+                p[i].deadLine = s1;
+                break;
+            } else {
+                printf("(Invalid Date)");
+                printf("\nDeadline:");
+                scanf("%d", &deadline);
+            }
+        }
+        printf("\nHow many employees will be needed for this project?");
+        scanf("%d", &p[i].numOfEmpNeeded);
+
+        fflush(stdin);
+        p[i].managerId = -1;
+
+        printf("\nDo you need experienced employee in this project?");
+        printf("\nEnter: 1 for Yes\n 2 for No:");
+        scanf("%d", &number);
+        fflush(stdin);
+        if (number == 1) {
+            printf("\nwhat should be the minimum experience that an employee must have?");
+            scanf("%d", &p[i].minExperience);
+            fflush(stdin);
+            printf("\nNumber of experienced employees you want.");
+            scanf("%d", &p[i].minExpEmpNum);
+            if (p[i].numOfEmpNeeded >= p[i].minExpEmpNum) {
+                p[i].minExpEmpNum = p[i].minExpEmpNum;
+            } else {
+                printf("\nNumber of minimum experience employee must be lesser then needed employee");
+                printf("\nNumber of experienced employees you want.");
+                scanf("%d", &p[i].minExpEmpNum);
+            }
+        } else {
+            p[i].minExperience = -1;
+            p[i].minExpEmpNum = -1;
+        }
+
+        fflush(stdin);
+        printf("\nAny kind of Advanced amount has been given by client?");
+        printf("\nEnter: 1 for Yes\n 2 for No\n");
+        scanf("%d", &number);
+        if (number == 1) {
+            p[i].isBilled = 1;
+        } else {
+            p[i].isBilled = 0;
+        }
+
+        fflush(stdin);
+        printf("\nDo you need domain expertise in this project?");
+        printf("\nEnter: 1 for Yes\n 2 for No");
+        fflush(stdin);
+        scanf("%d", &number);
+        fflush(stdin);
+        if (number == 1) {
+            printf("\nSelect one:\n1.Finance\n2.Banking\n3.Data Science\n4.Health care\n5.Education\n");
+            scanf("%s", &p[i].domainExpReq);
+
+        } else {
+            p[i].domainExpReq = "null";
+        }
+
+        printf("Enter the details of client associate with this project\n");
+        p[i].clientId = takeDataOfClient(p[i].id);
+
+        f1 = fopen(filepath, "a");
+        fprintf(f1, "\n%d|%s|%d|%s|%s|%s|%d|%d|%d|%d|%d|%s|%d", p[i].id, p[i].name, p[i].status, p[i].deadLine,
+                p[i].description, p[i].createdOn, p[i].numOfEmpNeeded, p[i].managerId, p[i].minExperience,
+                p[i].minExpEmpNum, p[i].isBilled, p[i].domainExpReq, p[i].clientId);
+        fclose(f1);
+    }
 }
 
 char *dateFormat(const char date[9]) {
@@ -660,3 +1085,11 @@ char *dateFormat(const char date[9]) {
     return temp;
 
 }
+
+int main() {
+    initializeApp();
+
+    allotEmployeeToProject(ALL_PROJECT_ARRAY[0]);
+    addNewEmployee();
+}
+
