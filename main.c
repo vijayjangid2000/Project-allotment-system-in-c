@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-/* Akshay and Vijay Coding here */
-
 const int PROJECT_STATUS_IDLE = 1;
 const int PROJECT_STATUS_COMPLETED = 2;
 const int PROJECT_STATUS_PROGRESS = 3;
