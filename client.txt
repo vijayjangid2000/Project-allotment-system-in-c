@@ -1,7 +1,4 @@
-Harshit@gmail.com | harshit@12 | manager | 5
-akhileshN@gmail.com | Akhilesh@12 | Admin | 6
-AmanJ@gmail.com | Aman@123 | Manager | 7
-sidharth@gmail.com | sidharth@12 | Manager | 11
-
-
-
+1|vijay|1|vijayOrg|8959272174|vijay@gmail.com
+2|vijay|2|vijayOrg|8959272174|vijay@gmail.com
+3|vijay|3|vijayOrg|8959272174|vijay@gmail.com
+4|vijay|4|vijayOrg|8959272174|vijay@gmail.com

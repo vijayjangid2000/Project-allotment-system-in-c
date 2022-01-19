@@ -34,7 +34,7 @@ const char FORMAT_PROJECT[100] = "%d|%s|%d|%s|%s|%s|%d|%d|%d|%d|%d|%d|%d\n";
 const char FORMAT_EMPLOYEE[100] = "%d|%s|%s|%d|%s|%s|%d|%d|%s|%d|%d\n";
 const char FORMAT_MEMBER[100] = "%d|%d|%d\n";
 const char FORMAT_CLIENT[100] = "%d|%s|%d|%s|%s|%s\n";
-const char FORMAT_LOGIN[100] = "%s|%s|%d|%d";
+const char FORMAT_LOGIN[100] = "%s|%s|%d|%d\n";
 
 const char DOMAIN_ARRAY[5][100] = {"Finance", "Banking", "Data Science", "HealthCare", "Education"};
 
@@ -129,19 +129,6 @@ static int ADD_MEMBER_ARRAY_SIZE = 0;
 
 // --------------------------------------------------------------
 
-void updateLoginFile() {
-    FILE *loginFile = fopen(ADDRESS_LOGIN, "w");
-
-    for (int i = 0; i < ALL_LOGIN_ARRAY_SIZE; ++i) {
-
-        fprintf(loginFile, FORMAT_LOGIN,
-                ALL_LOGIN_ARRAY[i].userName, ALL_LOGIN_ARRAY[i].password,
-                ALL_LOGIN_ARRAY[i].role, ALL_LOGIN_ARRAY[i].empId);
-    }
-
-    fclose(loginFile);
-}
-
 void updateProjectFile() {
 
     FILE *projectFile = fopen(ADDRESS_PROJECT, "w");
@@ -187,7 +174,34 @@ void updateMemberFile() {
     fclose(memberFile);
 }
 
-void convertRowToStructureProject(char row[], struct Project *project) {
+void updateLoginFile() {
+    FILE *loginFile = fopen(ADDRESS_LOGIN, "w");
+
+    for (int i = 0; i < ALL_LOGIN_ARRAY_SIZE; ++i) {
+
+        fprintf(loginFile, FORMAT_LOGIN,
+                ALL_LOGIN_ARRAY[i].userName, ALL_LOGIN_ARRAY[i].password,
+                ALL_LOGIN_ARRAY[i].role, ALL_LOGIN_ARRAY[i].empId);
+    }
+
+    fclose(loginFile);
+}
+
+void updateClientFile() {
+
+
+    FILE *clientFile = fopen(ADDRESS_CLIENT, "w");
+    for (int i = 0; i < ALL_CLIENT_ARRAY_SIZE; ++i) {
+        fprintf(clientFile, FORMAT_CLIENT,
+                ALL_CLIENT_ARRAY[i].clientId, ALL_CLIENT_ARRAY[i].personName,
+                ALL_CLIENT_ARRAY[i].projectId, ALL_CLIENT_ARRAY[i].companyName,
+                ALL_CLIENT_ARRAY[i].contactMob, ALL_CLIENT_ARRAY[i].contactEmail);
+    }
+
+    fclose(clientFile);
+}
+
+void convertRowToProject(char row[], struct Project *project) {
 
     char *p = strtok(row, "|");
     char *array[13];
@@ -259,7 +273,7 @@ void convertRowToMember(char row[], struct Member *member) {
     member->empRole = atoi(array[2]);
 }
 
-void convertRowToStructureLogin(char row[], struct Login *login) {
+void convertRowToLogin(char row[], struct Login *login) {
     char *p = strtok(row, "|");
     char *array[4];
 
@@ -280,6 +294,25 @@ void convertRowToStructureLogin(char row[], struct Login *login) {
     login->empId = atoi(array[3]);
 }
 
+void convertRowToClient(char row[], struct Client *client) {
+
+    char *p = strtok(row, "|");
+    char *array[6];
+
+    int i = 0;
+    while (p != NULL) {
+        array[i++] = p;
+        p = strtok(NULL, "|");
+    }
+
+    client->clientId = atoi(array[0]);
+    strcpy(client->personName, array[1]);
+    client->projectId = atoi(array[2]);
+    strcpy(client->companyName, array[3]);
+    strcpy(client->contactMob, array[4]);
+    strcpy(client->contactEmail, array[5]);
+}
+
 void getDataOfProjectTable() {
 
     FILE *fileProject = fopen(ADDRESS_PROJECT, "r");
@@ -288,7 +321,7 @@ void getDataOfProjectTable() {
     int index = 0;
     while (fgets(tempRow, 1000, fileProject) != NULL) {
         struct Project pr;
-        convertRowToStructureProject(tempRow, &pr);
+        convertRowToProject(tempRow, &pr);
         ALL_PROJECT_ARRAY[index++] = pr;
     }
 
@@ -366,7 +399,7 @@ void getDataOfLoginTable() {
     int index = 0;
     while (fgets(tempRow, 1000, loginFile) != NULL) {
         struct Login login;
-        convertRowToMember(tempRow, &login);
+        convertRowToLogin(tempRow, &login);
         ALL_LOGIN_ARRAY[index++] = login;
     }
 
@@ -382,12 +415,38 @@ void getDataOfLoginTable() {
     fclose(loginFile);
 }
 
+void getDataOfClientTable() {
+
+    FILE *clientFile = fopen(ADDRESS_CLIENT, "r");
+    char tempRow[1000];
+
+    int index = 0;
+    while (fgets(tempRow, 1000, clientFile) != NULL) {
+        struct Client client;
+        convertRowToClient(tempRow, &client);
+        ALL_CLIENT_ARRAY[index++] = client;
+    }
+
+    ALL_CLIENT_ARRAY_SIZE = index;
+
+    // number of rows is in index
+    for (int i = 0; i < index; ++i) {
+        struct Client client = ALL_CLIENT_ARRAY[i];
+        printf(FORMAT_CLIENT,
+               client.clientId, client.personName, client.projectId,
+               client.companyName, client.contactMob, client.contactEmail);
+    }
+
+    fclose(clientFile);
+}
+
 void initializeApp() {
     // This calls the important startUp functions
     getDataOfProjectTable();
     getDataOfEmployeeTable();
     getDataOfMemberTable();
-
+    getDataOfClientTable();
+    getDataOfLoginTable();
 }
 
 void allotEmployeeToProject(struct Project chosenProject) {
@@ -400,11 +459,13 @@ void allotEmployeeToProject(struct Project chosenProject) {
     int domainId = chosenProject.domainExpertId,
             experienceYear = chosenProject.minExperience;
 
-    int ba = numOfEmpNeeded / 0.3,
-            dev = ba,
-            tester = numOfEmpNeeded - (2 * ba);
+    int ba = numOfEmpNeeded * 0.3,
+            dev = numOfEmpNeeded - (2 * ba),
+            tester = ba;
 
-    struct Employee arrayEmpSelected[numOfEmpNeeded];
+    printf("\nAllotment Work BA %d Dev %d Tester %d", ba, dev, tester);
+
+    struct Employee selectedEmployees[numOfEmpNeeded];
     int indexEmp = 0;
 
     bool haveExperienced = false, haveDomainPerson = false, haveRequiredEmployees = false;
@@ -426,51 +487,54 @@ void allotEmployeeToProject(struct Project chosenProject) {
         return;
     }
 
-    // Checking for domainExpert and experienced Employees
+    // Allotting domainExpert and experienced Employees first
     for (int i = 0; i < ALL_EMP_ARRAY_SIZE; ++i) {
 
         if (ALL_EMP_ARRAY[i].designation == EMP_DESIG_WORKER &&
             ALL_EMP_ARRAY[i].engagedProjects < EMP_MAX_PROJECTS) {
 
             if (!haveDomainPerson && ALL_EMP_ARRAY[i].domainExpert == domainId) {
-                arrayEmpSelected[indexEmp++] = ALL_EMP_ARRAY[i];
+                selectedEmployees[indexEmp] = ALL_EMP_ARRAY[i];
                 numOfDomainNeeded--;
                 numOfEmpNeeded--;
                 ALL_EMP_ARRAY[i].engagedProjects++;
                 haveDomainPerson = true;
                 numOfSelectedEmployees++;
 
-                if (ba != 0) {
-                    arrayEmpSelected[indexEmp].roleInProject = MEMBER_BA;
+                if (ba > 0) {
+                    selectedEmployees[indexEmp].roleInProject = MEMBER_BA;
                     ba--;
-                } else if (dev != 0) {
-                    arrayEmpSelected[indexEmp].roleInProject = MEMBER_DEVELOPER;
+                } else if (dev > 0) {
+                    selectedEmployees[indexEmp].roleInProject = MEMBER_DEVELOPER;
                     dev--;
-                } else if (tester != 0) {
-                    arrayEmpSelected[indexEmp].roleInProject = MEMBER_TESTER;
+                } else if (tester > 0) {
+                    selectedEmployees[indexEmp].roleInProject = MEMBER_TESTER;
                     tester--;
                 }
+                indexEmp++;
 
-            } else if (numOfExperienced != 0 && experienceYear <= ALL_EMP_ARRAY[i].prevExperience) {
-                arrayEmpSelected[indexEmp++] = ALL_EMP_ARRAY[i];
+            } else if (numOfExperienced > 0 && experienceYear <= ALL_EMP_ARRAY[i].prevExperience) {
+                selectedEmployees[indexEmp] = ALL_EMP_ARRAY[i];
                 numOfExperienced--;
                 numOfEmpNeeded--;
                 ALL_EMP_ARRAY[i].engagedProjects++;
                 numOfSelectedEmployees++;
                 if (numOfExperienced == 0) haveExperienced = true;
 
-                if (ba != 0) {
-                    arrayEmpSelected[indexEmp].roleInProject = MEMBER_BA;
+                if (ba > 0) {
+                    selectedEmployees[indexEmp].roleInProject = MEMBER_BA;
                     ba--;
-                } else if (dev != 0) {
-                    arrayEmpSelected[indexEmp].roleInProject = MEMBER_DEVELOPER;
+                } else if (dev > 0) {
+                    selectedEmployees[indexEmp].roleInProject = MEMBER_DEVELOPER;
                     dev--;
-                } else if (tester != 0) {
-                    arrayEmpSelected[indexEmp].roleInProject = MEMBER_TESTER;
+                } else if (tester > 0) {
+                    selectedEmployees[indexEmp].roleInProject = MEMBER_TESTER;
                     tester--;
                 }
-
+                indexEmp++;
             }
+
+            if (haveExperienced && numOfExperienced == 0) break;
         }
     }
 
@@ -489,34 +553,36 @@ void allotEmployeeToProject(struct Project chosenProject) {
 
         if (ALL_EMP_ARRAY[i].designation == EMP_DESIG_WORKER &&
             ALL_EMP_ARRAY[i].engagedProjects < EMP_MAX_PROJECTS &&
-            numOfEmpNeeded != 0) {
+            numOfEmpNeeded > 0) {
 
             bool alreadyChosen = false;
 
             for (int j = 0; j < numOfSelectedEmployees; ++j) {
-                if (arrayEmpSelected->id == ALL_EMP_ARRAY[j].id) {
+                if (selectedEmployees[j].id == ALL_EMP_ARRAY[i].id) {
                     alreadyChosen = true;
                     break;
                 }
             }
 
-            if (alreadyChosen) continue;
+            if (alreadyChosen) continue; // already selected then continue
 
-            if (ba != 0) {
-                arrayEmpSelected[indexEmp].roleInProject = MEMBER_BA;
-                ba--;
-            } else if (dev != 0) {
-                arrayEmpSelected[indexEmp].roleInProject = MEMBER_DEVELOPER;
-                dev--;
-            } else if (tester != 0) {
-                arrayEmpSelected[indexEmp].roleInProject = MEMBER_TESTER;
-                tester--;
-            }
-
-            arrayEmpSelected[indexEmp++] = ALL_EMP_ARRAY[i];
+            selectedEmployees[indexEmp] = ALL_EMP_ARRAY[i];
             numOfEmpNeeded--;
             ALL_EMP_ARRAY[i].engagedProjects++;
             numOfSelectedEmployees++;
+
+            if (ba > 0) {
+                selectedEmployees[indexEmp].roleInProject = MEMBER_BA;
+                ba--;
+            } else if (dev > 0) {
+                selectedEmployees[indexEmp].roleInProject = MEMBER_DEVELOPER;
+                dev--;
+            } else if (tester > 0) {
+                selectedEmployees[indexEmp].roleInProject = MEMBER_TESTER;
+                tester--;
+            }
+
+            indexEmp++;
         }
     }
 
@@ -534,16 +600,16 @@ void allotEmployeeToProject(struct Project chosenProject) {
 
         struct Member m;
         m.projectId = chosenProject.id;
-        m.empId = arrayEmpSelected[i].id;
-        m.empRole = arrayEmpSelected[i].roleInProject;
+        m.empId = selectedEmployees[i].id;
+        m.empRole = selectedEmployees[i].roleInProject;
 
         ALL_MEMBER_ARRAY[ALL_MEMBER_ARRAY_SIZE++] = m;
     }
 
     // Now update all data in the file
-    updateEmployeeFile();
-    updateProjectFile();
-    updateMemberFile();
+    /* updateEmployeeFile();
+     updateProjectFile();
+     updateMemberFile();*/
 
     // Show Message on console
     printf("We have allotted the required Employees to the project");
@@ -563,7 +629,7 @@ void allotEmployeeToProject(struct Project chosenProject) {
 
     printf("Allotted Employees Details\n");
     for (int i = 0; i < numOfEmpNeeded; ++i) {
-        struct Employee emp1 = arrayEmpSelected[i];
+        struct Employee emp1 = selectedEmployees[i];
         printf(FORMAT_EMPLOYEE,
                emp1.id, emp1.name, emp1.joiningDate, emp1.designation, emp1.email,
                emp1.mobile, emp1.managerId, emp1.engagedProjects,
@@ -574,20 +640,8 @@ void allotEmployeeToProject(struct Project chosenProject) {
 }
 
 int main() {
-
     initializeApp();
-
-    int chosen;
-    scanf("%d", &chosen);
-
-    allotEmployeeToProject(ALL_PROJECT_ARRAY[chosen - 1]);
-    /*int chosenProject;
-    scanf("%d", &chosenProject);
-
-    printf("Allot Employee Called");
-    allotEmployeeToProject(ALL_PROJECT_ARRAY[chosenProject - 1]);
-
-    printf("Program Ended");*/
+    allotEmployeeToProject(ALL_PROJECT_ARRAY[0]);
 }
 
 char *dateFormat(const char date[9]) {
