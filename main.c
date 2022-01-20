@@ -31,11 +31,11 @@ const char ADDRESS_MEMBER[100] = "C:\\Users\\Lenovo\\CLionProjects\\untitled\\me
 const char ADDRESS_CLIENT[100] = "C:\\Users\\Lenovo\\CLionProjects\\untitled\\client.txt";
 const char ADDRESS_LOGIN[100] = "C:\\Users\\Lenovo\\CLionProjects\\untitled\\login.txt";
 
-const char FORMAT_PROJECT[100] = "%d|%s|%d|%s|%s|%s|%d|%d|%d|%d|%d|%d|%d\n";
-const char FORMAT_EMPLOYEE[100] = "%d|%s|%s|%d|%s|%s|%d|%d|%s|%d|%d\n";
-const char FORMAT_MEMBER[100] = "%d|%d|%d\n";
-const char FORMAT_CLIENT[100] = "%d|%s|%d|%s|%s|%s\n";
-const char FORMAT_LOGIN[100] = "%s|%s|%d|%d\n";
+const char FORMAT_PROJECT[100] = "\n%d|%s|%d|%s|%s|%s|%d|%d|%d|%d|%d|%d|%d";
+const char FORMAT_EMPLOYEE[100] = "\n%d|%s|%s|%d|%s|%s|%d|%d|%s|%d|%d";
+const char FORMAT_MEMBER[100] = "\n%d|%d|%d";
+const char FORMAT_CLIENT[100] = "\n%d|%s|%d|%s|%s|%s";
+const char FORMAT_LOGIN[100] = "\n%s|%s|%d|%d";
 
 const char DOMAIN_ARRAY[5][100] = {"Finance", "Banking", "Data Science", "HealthCare", "Education"};
 
@@ -52,6 +52,8 @@ const char COLUMNS_CLIENT[6][50] = {"ClientId", "personName", "ProjectId", "Comp
                                     "Mobile", "Email"};
 
 const char COLUMNS_LOGIN[4][50] = {"UserName", "Password", "RoleInCompany", "EmployeeId"};
+
+const bool isTesting = false;
 
 struct Project {
     int id;
@@ -330,6 +332,9 @@ void getDataOfProjectTable() {
 
     ALL_PROJECT_ARRAY_SIZE = index;
 
+
+    if (!isTesting) goto skip;
+
     // number of rows is in index
     for (int i = 0; i < ALL_PROJECT_ARRAY_SIZE; ++i) {
         struct Project p1 = ALL_PROJECT_ARRAY[i];
@@ -339,6 +344,8 @@ void getDataOfProjectTable() {
                p1.minExperience, p1.minExpEmpNum, p1.isBilled,
                p1.domainExpertId, p1.clientId);
     }
+
+    skip:
 
     fclose(fileProject);
 }
@@ -357,6 +364,7 @@ void getDataOfEmployeeTable() {
 
     ALL_EMP_ARRAY_SIZE = index;
 
+    if (!isTesting) goto skip;
     // number of rows is in index
     for (int i = 0; i < index; ++i) {
         struct Employee emp1 = ALL_EMP_ARRAY[i];
@@ -365,6 +373,7 @@ void getDataOfEmployeeTable() {
                emp1.mobile, emp1.managerId, emp1.engagedProjects,
                emp1.dob, emp1.prevExperience, emp1.domainExpert);
     }
+    skip:
 
     fclose(empFile);
 }
@@ -383,12 +392,14 @@ void getDataOfMemberTable() {
 
     ALL_MEMBER_ARRAY_SIZE = index;
 
+    if (!isTesting) goto skip;
     // number of rows is in index
     for (int i = 0; i < index; ++i) {
         struct Member member = ALL_MEMBER_ARRAY[i];
         printf(FORMAT_MEMBER,
                member.projectId, member.empId, member.empRole);
     }
+    skip:
 
     fclose(memberFile);
 }
@@ -407,12 +418,14 @@ void getDataOfLoginTable() {
 
     ALL_LOGIN_ARRAY_SIZE = index;
 
+    if (!isTesting) goto skip;
     // number of rows is in index
     for (int i = 0; i < index; ++i) {
         struct Login login = ALL_LOGIN_ARRAY[i];
         printf(FORMAT_LOGIN,
                login.userName, login.password, login.role, login.empId);
     }
+    skip:
 
     fclose(loginFile);
 }
@@ -431,6 +444,7 @@ void getDataOfClientTable() {
 
     ALL_CLIENT_ARRAY_SIZE = index;
 
+    if (!isTesting) goto skip;
     // number of rows is in index
     for (int i = 0; i < index; ++i) {
         struct Client client = ALL_CLIENT_ARRAY[i];
@@ -438,6 +452,7 @@ void getDataOfClientTable() {
                client.clientId, client.personName, client.projectId,
                client.companyName, client.contactMob, client.contactEmail);
     }
+    skip:
 
     fclose(clientFile);
 }
@@ -675,21 +690,6 @@ int mailValidation(char mailid[]) {
         return 0;
 }
 
-int generateID() {
-    FILE *f;
-    int temp = 0;
-    char datatoread[1000];
-    f = fopen("data1.txt", "r");
-    char *token;
-    fgets(datatoread, 500, f);
-    while (fgets(datatoread, 500, f) != NULL) {
-        token = strtok(datatoread, "|");
-        temp = atoi(token);
-    }
-    fclose(f);
-    return temp + 1;
-}
-
 int getSystemDate() {
     char str[100];
     int result = 0;
@@ -824,48 +824,19 @@ void addNewEmployee() {
     }
 
     if (operation <= 8)goto retake;
-    newEmp.id = generateID();
-    FILE *f;
+
+    newEmp.id = ALL_EMP_ARRAY_SIZE++;
+
     printf("Are You Sure?[y/n]:");
     if (getchar() == 'y') {
-        f = fopen("data1.txt", "a");
-        fprintf(f, "\n%d|%s|%s|%d|%s|%s|%d|%d|%s|%d|%s", newEmp.id, newEmp.name, newEmp.joiningDate, newEmp.designation,
-                newEmp.email, newEmp.mobile, newEmp.managerId, 0, newEmp.dob, newEmp.prevExperience,
-                newEmp.domainExpert);
-        fclose(f);
+        printf(FORMAT_EMPLOYEE, newEmp.id, newEmp.name, newEmp.joiningDate, newEmp.designation,
+               newEmp.email, newEmp.mobile, newEmp.managerId, 0, newEmp.dob, newEmp.prevExperience,
+               newEmp.domainExpert);
     }
-}
-
-void addProjectTask() {
 
 }
 
 /* Bhavya Task */
-
-typedef struct project {
-    int id;
-    char name[100];
-    int status;
-    char *deadLine;
-    char description[200];
-    char *createdOn;
-    int numOfEmpNeeded;
-    int managerId;
-    int minExperience;
-    int minExpEmpNum;
-    int isBilled;
-    char *domainExpReq;
-    int clientId;
-} project;
-
-struct client {
-    int clientId;
-    char personName[100];
-    int id;
-    char companyName[30];
-    char contactMob[11];
-    char contactEmail[30];
-};
 
 bool isEmailValid(char mailid[]) {
 
@@ -902,51 +873,40 @@ int getSystemDateB() {
     return result;
 }
 
-int generateIDB(char filepath[]) {
-    FILE *f;
-    int temp = 0;
-    char dataToRead[1000];
-    f = fopen(filepath, "r");
-    char *token;
-    //fgets(dataToRead,500,f);
-    while (fgets(dataToRead, 1000, f) != NULL) {
-        token = strtok(dataToRead, "|");
-        temp = atoi(token);
-    }
-    fclose(f);
-    return temp + 1;
-}
+int takeInputOfClient(int projectId) {
 
-int takeDataOfClient(int id) {
-    struct client c;
+    struct Client client;
     char email[100];
-    char filepath[100] = "client.txt";
-    FILE *f2;
-    f2 = fopen(filepath, "a");
-    c.clientId = generateID(filepath);
+
+    client.clientId = -1;
     fflush(stdin);
-    printf("\nClient's Name:");
-    gets(c.personName);
-    c.id = id;
-    printf("\nClient's Company:");
-    gets(c.companyName);
-    printf("\nEnter the contact details of client.");
-    printf("\nMobile Number:");
-    scanf("%s", &c.contactMob);
+
+    client.projectId = projectId;
+
+    printf("\nClient's Name: ");
+    gets(client.personName);
+
+    printf("\nClient's Company: ");
+    gets(client.companyName);
+
+    printf("\nEnter the contact details of client: ");
+    printf("\nMobile Number: ");
+    scanf("%s", &client.contactMob);
     while (1) {
-        if (strlen(c.contactMob) == 10 && isNumericString(c.contactMob) == 1) {
+        if (strlen(client.contactMob) == 10 && isNumericString(client.contactMob) == 1) {
             printf("                                                            ");
             break;
         } else {
             printf("\nMobile Number:");
-            scanf("%s", &c.contactMob);
+            scanf("%s", &client.contactMob);
         }
     }
+
     printf("\nEmail:");
     scanf("%s", &email);
     while (1) {
         if (isEmailValid(email)) {
-            strcpy(c.contactEmail, email);
+            strcpy(client.contactEmail, email);
             break;
         } else {
             printf("(Invalid Email)");
@@ -955,116 +915,114 @@ int takeDataOfClient(int id) {
 
         }
     }
-    fprintf(f2, "\n%d|%s|%d|%s|%s|%s  ", c.clientId, c.personName, c.id, c.companyName, c.contactMob, c.contactEmail);
-    fclose(f2);
-    return c.clientId;
+
+    printf(FORMAT_CLIENT, client.clientId, client.personName, client.projectId, client.companyName,
+           client.contactMob, client.contactEmail);
+    return client.clientId;
 }
 
-void takeDataFromUser() {
+void addProjectToCompany() {
     int deadline, created;
-    project *p;
-    FILE *f1;
-    int n, i, number;
-    char filepath[100] = "addproject.txt";
-    printf("How many projects you want to enter?");
-    scanf("%d", &n);
-    p = (project *) calloc(n, sizeof(project));
+    int number;
 
-    for (i = 0; i < n; i++) {
-        p[i].id = generateIDB(filepath);
-        fflush(stdin);
-        printf("\nProject Name:");
-        gets(p[i].name);
+    struct Project project;
+    project.id = ALL_PROJECT_ARRAY_SIZE;
+    fflush(stdin);
+    printf("\nProject Name:");
+    gets(project.name);
 
-        p[i].status = 1;
+    project.status = 1;
 
-        fflush(stdin);
-        printf("\nDescription:");
-        gets(p[i].description);
+    fflush(stdin);
+    printf("\nDescription:");
+    gets(project.description);
 
-        fflush(stdin);
-        created = getSystemDate();
-        char s[100];
-        sprintf(s, "%d", created);
-        p[i].createdOn = s;
+    fflush(stdin);
+    created = getSystemDateB();
+    char s[100];
+    sprintf(s, "%d", created);
+    strcpy(project.createdOn, s);
 
-        fflush(stdin);
-        printf("\nDeadline:");
-        scanf("%d", &deadline);
+    fflush(stdin);
+    printf("\nDeadline:");
+    scanf("%d", &deadline);
 
-        while (1) {
-            if (created < deadline) {
-                char s1[10];
-                sprintf(s1, "%d", deadline);
-                p[i].deadLine = s1;
-                break;
-            } else {
-                printf("(Invalid Date)");
-                printf("\nDeadline:");
-                scanf("%d", &deadline);
-            }
-        }
-        printf("\nHow many employees will be needed for this project?");
-        scanf("%d", &p[i].numOfEmpNeeded);
-
-        fflush(stdin);
-        p[i].managerId = -1;
-
-        printf("\nDo you need experienced employee in this project?");
-        printf("\nEnter: 1 for Yes\n 2 for No:");
-        scanf("%d", &number);
-        fflush(stdin);
-        if (number == 1) {
-            printf("\nwhat should be the minimum experience that an employee must have?");
-            scanf("%d", &p[i].minExperience);
-            fflush(stdin);
-            printf("\nNumber of experienced employees you want.");
-            scanf("%d", &p[i].minExpEmpNum);
-            if (p[i].numOfEmpNeeded >= p[i].minExpEmpNum) {
-                p[i].minExpEmpNum = p[i].minExpEmpNum;
-            } else {
-                printf("\nNumber of minimum experience employee must be lesser then needed employee");
-                printf("\nNumber of experienced employees you want.");
-                scanf("%d", &p[i].minExpEmpNum);
-            }
+    while (1) {
+        if (created < deadline) {
+            char s1[10];
+            sprintf(s1, "%d", deadline);
+            strcpy(project.deadLine, s1);
+            break;
         } else {
-            p[i].minExperience = -1;
-            p[i].minExpEmpNum = -1;
+            printf("(Invalid Date)");
+            printf("\nDeadline:");
+            scanf("%d", &deadline);
         }
-
-        fflush(stdin);
-        printf("\nAny kind of Advanced amount has been given by client?");
-        printf("\nEnter: 1 for Yes\n 2 for No\n");
-        scanf("%d", &number);
-        if (number == 1) {
-            p[i].isBilled = 1;
-        } else {
-            p[i].isBilled = 0;
-        }
-
-        fflush(stdin);
-        printf("\nDo you need domain expertise in this project?");
-        printf("\nEnter: 1 for Yes\n 2 for No");
-        fflush(stdin);
-        scanf("%d", &number);
-        fflush(stdin);
-        if (number == 1) {
-            printf("\nSelect one:\n1.Finance\n2.Banking\n3.Data Science\n4.Health care\n5.Education\n");
-            scanf("%s", &p[i].domainExpReq);
-
-        } else {
-            p[i].domainExpReq = "null";
-        }
-
-        printf("Enter the details of client associate with this project\n");
-        p[i].clientId = takeDataOfClient(p[i].id);
-
-        f1 = fopen(filepath, "a");
-        fprintf(f1, "\n%d|%s|%d|%s|%s|%s|%d|%d|%d|%d|%d|%s|%d", p[i].id, p[i].name, p[i].status, p[i].deadLine,
-                p[i].description, p[i].createdOn, p[i].numOfEmpNeeded, p[i].managerId, p[i].minExperience,
-                p[i].minExpEmpNum, p[i].isBilled, p[i].domainExpReq, p[i].clientId);
-        fclose(f1);
     }
+
+    printf("\nHow many employees will be needed for this project?");
+    scanf("%d", &project.numOfEmpNeeded);
+
+    fflush(stdin);
+    project.managerId = -1;
+
+    printf("\nDo you need experienced employee in this project?");
+    printf("\nEnter: 1 for Yes\n 2 for No:");
+    scanf("%d", &number);
+    fflush(stdin);
+    if (number == 1) {
+        printf("\nwhat should be the minimum experience that an employee must have?");
+        scanf("%d", &project.minExperience);
+        fflush(stdin);
+        printf("\nNumber of experienced employees you want.");
+        scanf("%d", &project.minExpEmpNum);
+        if (project.numOfEmpNeeded >= project.minExpEmpNum) {
+            project.minExpEmpNum = project.minExpEmpNum;
+        } else {
+            printf("\nNumber of minimum experience employee must be lesser then needed employee");
+            printf("\nNumber of experienced employees you want.");
+            scanf("%d", &project.minExpEmpNum);
+        }
+    } else {
+        project.minExperience = -1;
+        project.minExpEmpNum = -1;
+    }
+
+    fflush(stdin);
+    printf("\nAny kind of Advanced amount has been given by client?");
+    printf("\nEnter: 1 for Yes\n 2 for No\n");
+    scanf("%d", &number);
+    if (number == 1) {
+        project.isBilled = 1;
+    } else {
+        project.isBilled = 0;
+    }
+
+    fflush(stdin);
+    printf("\nDo you need domain expertise in this project?");
+    printf("\nEnter: 1 for Yes\n 2 for No");
+    fflush(stdin);
+    scanf("%d", &number);
+    fflush(stdin);
+    if (number == 1) {
+        printf("\nSelect one domain:\n1.Finance\n2.Banking\n3.Data Science\n4.Health care\n5.Education\n");
+
+        scanf("%d", project.domainExpertId);
+
+    } else {
+        project.domainExpertId = 0;
+    }
+
+    printf("Enter the details of client associate with this project\n");
+    project.clientId = takeInputOfClient(project.id);
+
+    printf(FORMAT_PROJECT, project.id, project.name, project.status,
+           project.deadLine,
+           project.description, project.createdOn, project.numOfEmpNeeded, project.managerId,
+           project.minExperience,
+           project.minExpEmpNum, project.isBilled, project.domainExpertId, project.clientId);
+
+    // ALL_PROJECT_ARRAY_SIZE++;
 }
 
 char *dateFormat(const char date[9]) {
@@ -1086,10 +1044,15 @@ char *dateFormat(const char date[9]) {
 
 }
 
+/* Akshay Task Here */
+
+
+
 int main() {
     initializeApp();
 
-    allotEmployeeToProject(ALL_PROJECT_ARRAY[0]);
-    addNewEmployee();
+    // allotEmployeeToProject(ALL_PROJECT_ARRAY[0]);
+    // addNewEmployee();
+    addProjectToCompany();
 }
 
