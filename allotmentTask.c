@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include "databaseHelper.h"
+#include "databaseHelper2.h"
 
 void startProcess(struct Project chosenProject) {
 

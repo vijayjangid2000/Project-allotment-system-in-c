@@ -32,16 +32,16 @@ const char ADDRESS_MEMBER[100] = "C:\\Users\\Lenovo\\CLionProjects\\untitled\\me
 const char ADDRESS_CLIENT[100] = "C:\\Users\\Lenovo\\CLionProjects\\untitled\\client.txt";
 const char ADDRESS_LOGIN[100] = "C:\\Users\\Lenovo\\CLionProjects\\untitled\\login.txt";
 
-const char FORMAT_PROJECT[100] = "\n%d|%s|%d|%s|%s|%s|%d|%d|%d|%d|%d|%d|%d";
-const char FORMAT_EMPLOYEE[100] = "\n%d|%s|%s|%d|%s|%s|%d|%d|%s|%d|%d";
-const char FORMAT_MEMBER[100] = "\n%d|%d|%d";
-const char FORMAT_CLIENT[100] = "\n%d|%s|%d|%s|%s|%s";
-const char FORMAT_LOGIN[100] = "\n%s|%s|%d|%d";
+const char FORMAT_PROJECT[100] = "%d|%s|%d|%s|%s|%s|%d|%d|%d|%d|%d|%d|%d";
+const char FORMAT_EMPLOYEE[100] = "%d|%s|%s|%d|%s|%s|%d|%d|%s|%d|%d";
+const char FORMAT_MEMBER[100] = "%d|%d|%d";
+const char FORMAT_CLIENT[100] = "%d|%s|%s|%s|%s|%d";
+const char FORMAT_LOGIN[100] = "%s|%s|%d|%d";
 
 const char FORMAT_PRINT_PROJECT[100] = "\n%d %s %d %s %s %s %d %d %d %d %d %d %d";
 const char FORMAT_PRINT_EMPLOYEE[100] = "\n%d %s %s %d %s %s %d %d %s %d %d";
 const char FORMAT_PRINT_MEMBER[100] = "\n%d %d %d";
-const char FORMAT_PRINT_CLIENT[100] = "%d %s %d %s %s %s"; // IF LAST IS %s THEN NO NEED OF \n
+const char FORMAT_PRINT_CLIENT[100] = "\n%d %s %s %s %s %d"; // IF LAST IS %s THEN NO NEED OF \n
 const char FORMAT_PRINT_LOGIN[100] = "\n%s %s %d %d";
 
 const char DOMAIN_ARRAY[5][100] = {"Finance", "Banking", "Data Science",
@@ -66,8 +66,8 @@ const char COLUMNS_EMPLOYEE[11][50] = {"Id", "Name", "JoiningDate", "Designation
                                        "Experience", "DomainExpert"};
 
 const char COLUMNS_MEMBER[3][50] = {"ProjectId", "EmpId", "EmpRole"};
-const char COLUMNS_CLIENT[6][50] = {"Id", "Name", "ProjectId", "Company",
-                                    "Mobile", "Email"};
+const char COLUMNS_CLIENT[6][50] = {"Id", "Name", "Company",
+                                    "Mobile", "Email", "ProjectId"};
 
 const char COLUMNS_LOGIN[4][50] = {"UserName", "Password", "Role", "EmpId"};
 
@@ -120,10 +120,10 @@ struct Login {
 struct Client {
     int clientId;
     char personName[100];
-    int projectId;
     char companyName[100];
     char contactMob[11];
     char contactEmail[100];
+    int projectId;
 };
 
 struct Employee ALL_EMP_ARRAY[100];
@@ -176,8 +176,8 @@ void printSingleLineLogin(struct Login login) {
 void printSingleLineClient(struct Client client) {
 
     printf(FORMAT_PRINT_CLIENT,
-           client.clientId, client.personName, client.projectId,
-           client.companyName, client.contactMob, client.contactEmail);
+           client.clientId, client.personName, client.companyName,
+           client.contactMob, client.contactEmail, client.projectId);
 
 }
 
@@ -204,7 +204,7 @@ void printColumnsClient() {
     for (int i = 0; i < SIZE_COLUMNS_CLIENT; ++i) {
         printf("%s ", COLUMNS_CLIENT[i]);
     }
-    printf("\n\n");
+    printf("\n");
 }
 
 void printColumnsLogin() {
@@ -231,17 +231,22 @@ void updateProjectFile() {
 
     for (int i = 0; i < ALL_PROJECT_ARRAY_SIZE; ++i) {
 
-        fprintf(projectFile, FORMAT_PROJECT,
-                ALL_PROJECT_ARRAY[i].id, ALL_PROJECT_ARRAY[i].name, ALL_PROJECT_ARRAY[i].status,
-                ALL_PROJECT_ARRAY[i].deadLine, ALL_PROJECT_ARRAY[i].description,
-                ALL_PROJECT_ARRAY[i].createdOn, ALL_PROJECT_ARRAY[i].numOfEmpNeeded,
-                ALL_PROJECT_ARRAY[i].managerId, ALL_PROJECT_ARRAY[i].minExperience,
-                ALL_PROJECT_ARRAY[i].minExpEmpNum, ALL_PROJECT_ARRAY[i].isBilled,
-                ALL_PROJECT_ARRAY[i].domainExpertId, ALL_PROJECT_ARRAY[i].clientId);
+        if (i != 0) fprintf(projectFile, "%s", "\n");
 
+        struct Project tempP = ALL_PROJECT_ARRAY[i];
+        fprintf(projectFile, FORMAT_PROJECT,
+                tempP.id, tempP.name, tempP.status,
+                tempP.deadLine, tempP.description,
+                tempP.createdOn, tempP.numOfEmpNeeded,
+                tempP.managerId, tempP.minExperience,
+                tempP.minExpEmpNum, tempP.isBilled,
+                tempP.domainExpertId, tempP.clientId);
+
+        ALL_PROJECT_ARRAY[i] = tempP;
     }
 
     fclose(projectFile);
+
 }
 
 void updateEmployeeFile() {
@@ -249,6 +254,7 @@ void updateEmployeeFile() {
     FILE *employeeFile = fopen(ADDRESS_EMPLOYEE, "w");
 
     for (int i = 0; i < ALL_EMP_ARRAY_SIZE; ++i) {
+        if (i != 0) fprintf(employeeFile, "%s", "\n");
         fprintf(employeeFile, FORMAT_EMPLOYEE,
                 ALL_EMP_ARRAY[i].id, ALL_EMP_ARRAY[i].name, ALL_EMP_ARRAY[i].joiningDate, ALL_EMP_ARRAY[i].designation,
                 ALL_EMP_ARRAY[i].email,
@@ -264,6 +270,7 @@ void updateMemberFile() {
     FILE *memberFile = fopen(ADDRESS_MEMBER, "w");
 
     for (int i = 0; i < ALL_MEMBER_ARRAY_SIZE; ++i) {
+        if (i != 0) fprintf(memberFile, "%s", "\n");
         fprintf(memberFile, FORMAT_MEMBER,
                 ALL_MEMBER_ARRAY[i].projectId, ALL_MEMBER_ARRAY[i].empId, ALL_MEMBER_ARRAY[i].empRole);
     }
@@ -275,6 +282,7 @@ void updateLoginFile() {
 
     FILE *loginFile = fopen(ADDRESS_LOGIN, "w");
     for (int i = 0; i < ALL_LOGIN_ARRAY_SIZE; ++i) {
+        if (i != 0) fprintf(loginFile, "%s", "\n");
         fprintf(loginFile, FORMAT_LOGIN,
                 ALL_LOGIN_ARRAY[i].userName, ALL_LOGIN_ARRAY[i].password,
                 ALL_LOGIN_ARRAY[i].role, ALL_LOGIN_ARRAY[i].empId);
@@ -287,10 +295,11 @@ void updateClientFile() {
 
     FILE *clientFile = fopen(ADDRESS_CLIENT, "w");
     for (int i = 0; i < ALL_CLIENT_ARRAY_SIZE; ++i) {
+        if (i != 0) fprintf(clientFile, "%s", "\n");
         fprintf(clientFile, FORMAT_CLIENT,
                 ALL_CLIENT_ARRAY[i].clientId, ALL_CLIENT_ARRAY[i].personName,
-                ALL_CLIENT_ARRAY[i].projectId, ALL_CLIENT_ARRAY[i].companyName,
-                ALL_CLIENT_ARRAY[i].contactMob, ALL_CLIENT_ARRAY[i].contactEmail);
+                ALL_CLIENT_ARRAY[i].companyName, ALL_CLIENT_ARRAY[i].contactMob,
+                ALL_CLIENT_ARRAY[i].contactEmail, ALL_CLIENT_ARRAY[i].projectId);
     }
 
     fclose(clientFile);
@@ -312,19 +321,20 @@ void convertRowToProject(char row[], struct Project *project) {
         printf(" ");
     }*/
 
-    project->id = atoi(array[0]);
-    strcpy(project->name, array[1]);
-    project->status = atoi(array[2]);
-    strncpy(project->deadLine, array[3], 9);
-    strcpy(project->description, array[4]);
-    strncpy(project->createdOn, array[5], 9);
-    project->numOfEmpNeeded = atoi(array[6]);
-    project->managerId = atoi(array[7]);
-    project->minExperience = atoi(array[8]);
-    project->minExpEmpNum = atoi(array[9]);
-    project->isBilled = atoi(array[10]);
-    project->domainExpertId = atoi(array[11]);
-    project->clientId = atoi(array[12]);
+    int c = 0;
+    project->id = atoi(array[c++]);
+    strcpy(project->name, array[c++]);
+    project->status = atoi(array[c++]);
+    strncpy(project->deadLine, array[c++], 9);
+    strcpy(project->description, array[c++]);
+    strncpy(project->createdOn, array[c++], 9);
+    project->numOfEmpNeeded = atoi(array[c++]);
+    project->managerId = atoi(array[c++]);
+    project->minExperience = atoi(array[c++]);
+    project->minExpEmpNum = atoi(array[c++]);
+    project->isBilled = atoi(array[c++]);
+    project->domainExpertId = atoi(array[c++]);
+    project->clientId = atoi(array[c++]);
 }
 
 void convertRowToEmployee(char row[], struct Employee *employee) {
@@ -338,18 +348,19 @@ void convertRowToEmployee(char row[], struct Employee *employee) {
         p = strtok(NULL, "|");
     }
 
-    employee->id = atoi(array[0]);
-    strcpy(employee->name, array[1]);
-    strncpy(employee->joiningDate, array[2], 9);
-    employee->designation = atoi(array[3]);
-    strcpy(employee->email, array[4]);
-    strcpy(employee->mobile, array[5]);
-    employee->managerId = atoi(array[6]);
-    employee->engagedProjects = atoi(array[7]);
-    strncpy(employee->dob, array[8], 9);
-    employee->prevExperience = atoi(array[9]);
-    employee->domainExpert = atoi(array[10]);
-    employee->roleInProject = atoi(array[11]); // this is useful to add to member table
+    int c = 0;
+    employee->id = atoi(array[c++]);
+    strcpy(employee->name, array[c++]);
+    strncpy(employee->joiningDate, array[c++], 9);
+    employee->designation = atoi(array[c++]);
+    strcpy(employee->email, array[c++]);
+    strcpy(employee->mobile, array[c++]);
+    employee->managerId = atoi(array[c++]);
+    employee->engagedProjects = atoi(array[c++]);
+    strncpy(employee->dob, array[c++], 9);
+    employee->prevExperience = atoi(array[c++]);
+    employee->domainExpert = atoi(array[c++]);
+    employee->roleInProject = atoi(array[c++]); // this is useful to add to member table
 }
 
 void convertRowToMember(char row[], struct Member *member) {
@@ -363,9 +374,10 @@ void convertRowToMember(char row[], struct Member *member) {
         p = strtok(NULL, "|");
     }
 
-    member->projectId = atoi(array[0]);
-    member->empId = atoi(array[1]);
-    member->empRole = atoi(array[2]);
+    int c = 0;
+    member->projectId = atoi(array[c++]);
+    member->empId = atoi(array[c++]);
+    member->empRole = atoi(array[c++]);
 }
 
 void convertRowToLogin(char row[], struct Login *login) {
@@ -383,10 +395,11 @@ void convertRowToLogin(char row[], struct Login *login) {
         printf(" ");
     }*/
 
-    strcpy(login->userName, array[0]);
-    strcpy(login->password, array[1]);
-    login->role = atoi(array[2]);
-    login->empId = atoi(array[3]);
+    int c = 0;
+    strcpy(login->userName, array[c++]);
+    strcpy(login->password, array[c++]);
+    login->role = atoi(array[c++]);
+    login->empId = atoi(array[c++]);
 }
 
 void convertRowToClient(char row[], struct Client *client) {
@@ -400,12 +413,13 @@ void convertRowToClient(char row[], struct Client *client) {
         p = strtok(NULL, "|");
     }
 
-    client->clientId = atoi(array[0]);
-    strcpy(client->personName, array[1]);
-    client->projectId = atoi(array[2]);
-    strcpy(client->companyName, array[3]);
-    strcpy(client->contactMob, array[4]);
-    strcpy(client->contactEmail, array[5]);
+    int c = 0;
+    client->clientId = atoi(array[c++]);
+    strcpy(client->personName, array[c++]);
+    strcpy(client->companyName, array[c++]);
+    strcpy(client->contactMob, array[c++]);
+    strcpy(client->contactEmail, array[c++]);
+    client->projectId = atoi(array[c++]);
 }
 
 void getDataOfProjectTable() {
@@ -575,7 +589,6 @@ struct Project getProjectById(int projectId) {
     }
 }
 
-
 // INTERNAL - NO DIRECT CALL ---> Print ALL Data for testing
 
 void testPrintClients() {
@@ -662,4 +675,10 @@ void performDatabaseTesting() {
 
     testPrintRowsSize();
 
+    updateProjectFile();
+
+}
+
+void simpleTest() {
+    printf("Checking Simple calling");
 }

@@ -3,12 +3,12 @@
 #include<stdlib.h>
 #include<string.h>
 #include<windows.h>
-#include "databaseHelper.h"
+#include "databaseHelper2.h"
 
 int validate(char *buf) {
     int i;
     for (i = 0; i < strlen(buf); ++i)
-        if (!isalpha(buf[i]) && buf[i] != ' ')   // missing index
+        if (!isalpha(buf[i]) && buf[i] != ' ') // missing index
             return 0;
     return 1;
 }
@@ -198,10 +198,13 @@ void addProjectToCompany() {
             printf("\nDo Client paid for project Development?");
             printf("\nEnter: 1. Yes\n       2. No\n");
             scanf("%d", &number);
+            number = 1;
             if (number == 1) {
                 project.isBilled = PROJECT_BILLED;
+                operation++;
             } else if (number == 2) {
                 project.isBilled = PROJECT_NOT_BILLED;
+                operation++;
             } else {
                 printf("\n Invalid Input");
             }
@@ -212,9 +215,7 @@ void addProjectToCompany() {
             fflush(stdin);
             printf("\nDo you need Domain Expert in this project?");
             printf("\nEnter: 1. Yes\n 2. No");
-            fflush(stdin);
             scanf("%d", &number);
-            fflush(stdin);
 
             if (number == 1) {
                 project.domainExpertId = 1; // giving value other than zero
@@ -233,7 +234,7 @@ void addProjectToCompany() {
                     printf("\n%d. %s", i + 1, DOMAIN_ARRAY[i]);
                 }
                 printf("\nSelect one: ");
-                scanf("%d", project.domainExpertId);
+                scanf("%d", &project.domainExpertId);
             }
             operation++;
             break;

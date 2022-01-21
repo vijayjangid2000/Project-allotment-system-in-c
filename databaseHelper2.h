@@ -1,5 +1,5 @@
-#ifndef UNTITLED_DATABASEHELPER_H
-#define UNTITLED_DATABASEHELPER_H
+#ifndef UNTITLED_DATABASEHELPER2_H
+#define UNTITLED_DATABASEHELPER2_H
 
 #include <stdbool.h>
 
@@ -220,4 +220,6 @@ void testPrintRowsSize();
 
 void performDatabaseTesting();
 
-#endif //UNTITLED_DATABASEHELPER_H
+void simpleTest();
+
+#endif //UNTITLED_DATABASEHELPER2_H

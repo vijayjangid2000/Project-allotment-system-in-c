@@ -3,4 +3,4 @@ project(untitled C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(untitled main.c userInterface.c inputProject.c loginTask.c inputEmployee.c databaseHelper.c Allotment.c userInterface.h inputProject.h databaseHelper.h Allotment.h inputEmployee.h loginTask.h)
+add_executable(untitled main.c userInterface.c inputProjectTask.c loginEmpTask.c inputEmpTask.c databaseHelper2.c allotmentTask.c userInterface.h inputProjectTask.h databaseHelper2.h allotmentTask.h inputEmpTask.h loginEmpTask.h)

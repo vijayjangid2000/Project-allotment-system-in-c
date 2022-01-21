@@ -5,7 +5,7 @@
 #include<stdlib.h>
 #include<ctype.h>
 
-#include "databaseHelper.h"
+#include "databaseHelper2.h"
 
 int isNumericString(char str[]) {
     int flag = 1, i = 0;
@@ -106,24 +106,23 @@ int nameValidation(char *buf) {
     return 1;
 }
 
-int experienceValidate(char dob[]){
-    char dobYear[5]="0000";
-    char dobMonth[3]="00";
-    char currentYear[5]="0000";
+int experienceValidate(char dob[]) {
+    char dobYear[5] = "0000";
+    char dobMonth[3] = "00";
+    char currentYear[5] = "0000";
     int exp;
     SYSTEMTIME s;
     GetSystemTime(&s);
-    for(int i=0;i<4;i++){
-        dobYear[i]=dob[i];
+    for (int i = 0; i < 4; i++) {
+        dobYear[i] = dob[i];
     }
-    for(int i=4;i<6;i++){
-        dobMonth[i]=dobMonth[i];
+    for (int i = 4; i < 6; i++) {
+        dobMonth[i] = dobMonth[i];
     }
-    exp=(s.wYear-atoi(dobYear)-1)*12+12-atoi(dobMonth)-18*12;
-    if(exp>=0){
-        return exp/12;
-    }
-    else{
+    exp = (s.wYear - atoi(dobYear) - 1) * 12 + 12 - atoi(dobMonth) - 18 * 12;
+    if (exp >= 0) {
+        return exp / 12;
+    } else {
         return -1;
     }
     return exp;
@@ -141,10 +140,9 @@ void addNewEmployee() {
         case 1:
             printf("\nEnter Name: ");
             gets(newEmp.name);
-            if(nameValidation(newEmp.name)==1){
+            if (nameValidation(newEmp.name) == 1) {
                 operation++;
-            }
-            else{
+            } else {
                 printf("\nPlease enter a valid name");
             }
             break;
@@ -161,15 +159,14 @@ void addNewEmployee() {
 
         case 3:
             printf("\nEnter Designation");
-            for(int i=0;i<3;i++){
-                printf("\n%d- %s",i+1,DESIG_ARRAY_EMP[i]);
+            for (int i = 0; i < 3; i++) {
+                printf("\n%d- %s", i + 1, DESIG_ARRAY_EMP[i]);
             }
             scanf(" %d", &newEmp.designation);
             getchar();
-            if(newEmp.designation<=3 && newEmp.designation>0){
+            if (newEmp.designation <= 3 && newEmp.designation > 0) {
                 operation++;
-            }
-            else{
+            } else {
                 printf("\nPlease Enter A Value Between 1-3");
             }
             break;
@@ -205,7 +202,7 @@ void addNewEmployee() {
         case 7:
             printf("\nEnter Date Of Birth(yyyyMMdd): ");
             gets(newEmp.dob);
-            if (atoi(newEmp.dob) <= getSystemDate() && strlen(newEmp.dob) == 8 && experienceValidate(newEmp.dob)>=0) {
+            if (atoi(newEmp.dob) <= getSystemDate() && strlen(newEmp.dob) == 8 && experienceValidate(newEmp.dob) >= 0) {
                 operation++;
             } else {
                 printf("Enter Valid Date");
@@ -216,18 +213,17 @@ void addNewEmployee() {
             printf("\nEnter Previous Experience (in years): ");
             scanf(" %d", &newEmp.prevExperience);
             getchar();
-            if(newEmp.prevExperience<=experienceValidate(newEmp.dob)){
+            if (newEmp.prevExperience <= experienceValidate(newEmp.dob)) {
                 operation++;
-            }
-            else{
+            } else {
                 printf("\nPlease enter a valid experience");
             }
             break;
 
         case 9:
             printf("\nChoose Expertise in domain: ");
-            for(int i=0;i<5;i++){
-                printf("\n%d- %s",i+1,DOMAIN_ARRAY[i]);
+            for (int i = 0; i < 5; i++) {
+                printf("\n%d- %s", i + 1, DOMAIN_ARRAY[i]);
             }
             scanf("%d", newEmp.domainExpert);
             operation++;
