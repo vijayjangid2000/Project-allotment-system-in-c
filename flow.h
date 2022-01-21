@@ -27,7 +27,6 @@ void admin();
 
 void manager();
 
-
 void login1();
 
 void startUI();

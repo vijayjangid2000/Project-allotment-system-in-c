@@ -5,7 +5,7 @@
 #ifndef UNTITLED_ALLOTMENT_H
 #define UNTITLED_ALLOTMENT_H
 
-void startProcess();
+void startProcess(struct Project chosenProject);
 void allotEmployeeToProject();
 
 #endif //UNTITLED_ALLOTMENT_H
