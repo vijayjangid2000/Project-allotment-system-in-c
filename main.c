@@ -6,7 +6,12 @@
 #include<conio.h>
 #include<ctype.h>
 
-void initializeApp();
+#include "Utility.h"
+#include "Allotment.h"
+#include "InputProject.h"
+#include "InputEmp.h"
+#include "loginTask.h"
+#include "flow.h"
 
 int main() {
     initializeApp();

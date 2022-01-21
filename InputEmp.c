@@ -5,6 +5,8 @@
 #include<stdlib.h>
 #include<ctype.h>
 
+#include "Utility.h"
+
 int isNumericString(char str[]) {
     int flag = 1, i = 0;
     while (i < strlen(str)) {
@@ -227,7 +229,7 @@ void addNewEmployee() {
             for(int i=0;i<5;i++){
                 printf("\n%d- %s",i+1,DOMAIN_ARRAY[i]);
             }
-            gets(newEmp.domainExpert);
+            scanf("%d", newEmp.domainExpert);
             operation++;
             break;
     }

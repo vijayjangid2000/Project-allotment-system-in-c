@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include<conio.h>
 
+#include "Utility.h"
+
 void startProcess(struct Project chosenProject) {
 
     int numOfEmpNeeded = chosenProject.numOfEmpNeeded;
@@ -217,7 +219,7 @@ void startProcess(struct Project chosenProject) {
 void allotEmployeeToProject() {
 
     int chosenId;
-    int total = displayIdleProjects();
+    int total = displayProjects(2);
 
     if(total == 0) printf("\n There are no idle projects left.");
     else printf("\nPlease choose one project to allocate employees to it: ");

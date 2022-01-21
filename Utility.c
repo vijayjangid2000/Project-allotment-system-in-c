@@ -518,7 +518,7 @@ void displayEmployees(int STATUS) {
     }
 }
 
-int displayIdleProjects(int STATUS) {
+int displayProjects(int STATUS) {
 
     printColumnsProject();
     int projectsCount = 0;
