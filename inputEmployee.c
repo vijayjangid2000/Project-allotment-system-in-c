@@ -5,7 +5,7 @@
 #include<stdlib.h>
 #include<ctype.h>
 
-#include "Utility.h"
+#include "databaseHelper.h"
 
 int isNumericString(char str[]) {
     int flag = 1, i = 0;

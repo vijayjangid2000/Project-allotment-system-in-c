@@ -1,10 +1,6 @@
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <stdbool.h>
-#include<conio.h>
-
-#include "Utility.h"
+#include "databaseHelper.h"
 
 void startProcess(struct Project chosenProject) {
 
@@ -221,7 +217,7 @@ void allotEmployeeToProject() {
     int chosenId;
     int total = displayProjects(2);
 
-    if(total == 0) printf("\n There are no idle projects left.");
+    if (total == 0) printf("\n There are no idle projects left.");
     else printf("\nPlease choose one project to allocate employees to it: ");
 
     again:

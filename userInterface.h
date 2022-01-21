@@ -1,5 +1,5 @@
-#ifndef UNTITLED_FLOW_H
-#define UNTITLED_FLOW_H
+#ifndef UNTITLED_USERINTERFACE_H
+#define UNTITLED_USERINTERFACE_H
 
 void admin();
 
@@ -31,4 +31,4 @@ void login1();
 
 void startUI();
 
-#endif //UNTITLED_FLOW_H
+#endif //UNTITLED_USERINTERFACE_H

@@ -41,35 +41,35 @@ const char FORMAT_LOGIN[100] = "\n%s|%s|%d|%d";
 const char FORMAT_PRINT_PROJECT[100] = "\n%d %s %d %s %s %s %d %d %d %d %d %d %d";
 const char FORMAT_PRINT_EMPLOYEE[100] = "\n%d %s %s %d %s %s %d %d %s %d %d";
 const char FORMAT_PRINT_MEMBER[100] = "\n%d %d %d";
-const char FORMAT_PRINT_CLIENT[100] = "\n%d %s %d %s %s %s";
+const char FORMAT_PRINT_CLIENT[100] = "%d %s %d %s %s %s"; // IF LAST IS %s THEN NO NEED OF \n
 const char FORMAT_PRINT_LOGIN[100] = "\n%s %s %d %d";
 
 const char DOMAIN_ARRAY[5][100] = {"Finance", "Banking", "Data Science",
                                    "HealthCare", "Education"};
 const int SIZE_DOMAIN = 5;
 
-const char DESIG_ARRAY_EMP[3][100] = {"Manager", "Admin", "Worker"};
-const int SIZE_DESIG = 3;
-
-const char COLUMNS_PROJECT[13][50] = {"Id", "Name", "Status", "DeadLine", "Description",
-                                      "CreatedOn", "NumEmpNeeded", "ManagerId", "MinExperience",
-                                      "MinExpEmpNum", "IsBilled", "DomainExpReq", "ClientId"};
-
-const char COLUMNS_EMPLOYEE[11][50] = {"Id", "Name", "JoiningDate", "Designation", "Email",
-                                       "Mobile", "ManagerId", "EngagedProject", "DateOfBirth",
-                                       "PrevExperience", "DomainExpert"};
-
-const char COLUMNS_MEMBER[3][50] = {"ProjectId", "EmpId", "EmpRole"};
-const char COLUMNS_CLIENT[6][50] = {"ClientId", "Name", "ProjectId", "Company",
-                                    "Mobile", "Email"};
-
-const char COLUMNS_LOGIN[4][50] = {"UserName", "Password", "RoleInCompany", "EmployeeId"};
-
 const int SIZE_COLUMNS_EMPLOYEE = 11;
 const int SIZE_COLUMNS_MEMBER = 3;
 const int SIZE_COLUMNS_CLIENT = 6;
 const int SIZE_COLUMNS_LOGIN = 4;
 const int SIZE_COLUMNS_PROJECT = 13;
+
+const char DESIG_ARRAY_EMP[3][100] = {"Manager", "Admin", "Worker"};
+const int SIZE_DESIG = 3;
+
+const char COLUMNS_PROJECT[13][50] = {"Id", "Name", "Status", "DeadLine", "Description",
+                                      "CreatedOn", "Employees", "ManagerId", "Experience",
+                                      "NumExper", "Bill", "Domain", "Client"};
+
+const char COLUMNS_EMPLOYEE[11][50] = {"Id", "Name", "JoiningDate", "Designation", "Email",
+                                       "Mobile", "ManagerId", "numOfProjects", "Dob",
+                                       "Experience", "DomainExpert"};
+
+const char COLUMNS_MEMBER[3][50] = {"ProjectId", "EmpId", "EmpRole"};
+const char COLUMNS_CLIENT[6][50] = {"Id", "Name", "ProjectId", "Company",
+                                    "Mobile", "Email"};
+
+const char COLUMNS_LOGIN[4][50] = {"UserName", "Password", "Role", "EmpId"};
 
 const bool isTesting = false;
 
@@ -127,24 +127,24 @@ struct Client {
 };
 
 struct Employee ALL_EMP_ARRAY[100];
-static int ALL_EMP_ARRAY_SIZE = 0;
+int ALL_EMP_ARRAY_SIZE = 0;
 
 struct Project ALL_PROJECT_ARRAY[100];
-static int ALL_PROJECT_ARRAY_SIZE = 0;
+int ALL_PROJECT_ARRAY_SIZE = 0;
 
 struct Member ALL_MEMBER_ARRAY[100 * 5];
-static int ALL_MEMBER_ARRAY_SIZE = 0;
+int ALL_MEMBER_ARRAY_SIZE = 0;
 
 struct Login ALL_LOGIN_ARRAY[100];
-static int ALL_LOGIN_ARRAY_SIZE = 0;
+int ALL_LOGIN_ARRAY_SIZE = 0;
 
 struct Client ALL_CLIENT_ARRAY[100];
-static int ALL_CLIENT_ARRAY_SIZE = 0;
+int ALL_CLIENT_ARRAY_SIZE = 0;
 
 // SINGLE LINE PRINTING
 
 void printSingleLineProject(struct Project project) {
-    printf(FORMAT_PROJECT,
+    printf(FORMAT_PRINT_PROJECT,
            project.id, project.name, project.status, project.deadLine, project.description,
            project.createdOn, project.numOfEmpNeeded, project.managerId,
            project.minExperience, project.minExpEmpNum, project.isBilled,
@@ -184,38 +184,43 @@ void printSingleLineClient(struct Client client) {
 // -------> COLUMNS PRINTING
 
 void printColumnsProject() {
-    printf("\n");
+    printf("\n\n");
     for (int i = 0; i < SIZE_COLUMNS_PROJECT; ++i) {
-        printf(" %s", COLUMNS_PROJECT[i]);
+        printf("%s ", COLUMNS_PROJECT[i]);
     }
+    printf("\n");
 }
 
 void printColumnsEmployee() {
-    printf("\n");
+    printf("\n\n");
     for (int i = 0; i < SIZE_COLUMNS_EMPLOYEE; ++i) {
-        printf(" %s", COLUMNS_EMPLOYEE[i]);
+        printf("%s ", COLUMNS_EMPLOYEE[i]);
     }
+    printf("\n");
 }
 
 void printColumnsClient() {
-    printf("\n");
+    printf("\n\n");
     for (int i = 0; i < SIZE_COLUMNS_CLIENT; ++i) {
-        printf(" %s", COLUMNS_CLIENT[i]);
+        printf("%s ", COLUMNS_CLIENT[i]);
     }
+    printf("\n\n");
 }
 
 void printColumnsLogin() {
-    printf("\n");
+    printf("\n\n");
     for (int i = 0; i < SIZE_COLUMNS_LOGIN; ++i) {
-        printf(" %s", COLUMNS_LOGIN[i]);
+        printf("%s ", COLUMNS_LOGIN[i]);
     }
+    printf("\n");
 }
 
 void printColumnsMember() {
-    printf("\n");
+    printf("\n\n");
     for (int i = 0; i < SIZE_COLUMNS_MEMBER; ++i) {
-        printf(" %s", COLUMNS_MEMBER[i]);
+        printf("%s ", COLUMNS_MEMBER[i]);
     }
+    printf("\n");
 }
 
 // INITIALIZATION
@@ -294,7 +299,7 @@ void updateClientFile() {
 void convertRowToProject(char row[], struct Project *project) {
 
     char *p = strtok(row, "|");
-    char *array[13];
+    char *array[SIZE_COLUMNS_PROJECT];
 
     int i = 0;
     while (p != NULL) {
@@ -325,7 +330,7 @@ void convertRowToProject(char row[], struct Project *project) {
 void convertRowToEmployee(char row[], struct Employee *employee) {
 
     char *p = strtok(row, "|");
-    char *array[12];
+    char *array[SIZE_COLUMNS_EMPLOYEE];
 
     int i = 0;
     while (p != NULL) {
@@ -350,7 +355,7 @@ void convertRowToEmployee(char row[], struct Employee *employee) {
 void convertRowToMember(char row[], struct Member *member) {
 
     char *p = strtok(row, "|");
-    char *array[3];
+    char *array[SIZE_COLUMNS_MEMBER];
 
     int i = 0;
     while (p != NULL) {
@@ -365,7 +370,7 @@ void convertRowToMember(char row[], struct Member *member) {
 
 void convertRowToLogin(char row[], struct Login *login) {
     char *p = strtok(row, "|");
-    char *array[4];
+    char *array[SIZE_COLUMNS_LOGIN];
 
     int i = 0;
     while (p != NULL) {
@@ -387,7 +392,7 @@ void convertRowToLogin(char row[], struct Login *login) {
 void convertRowToClient(char row[], struct Client *client) {
 
     char *p = strtok(row, "|");
-    char *array[6];
+    char *array[SIZE_COLUMNS_CLIENT];
 
     int i = 0;
     while (p != NULL) {
@@ -499,7 +504,7 @@ void initializeApp() {
 
 void displayEmployees(int STATUS) {
 
-    printf("Idle Employee Report");
+    printf("Employee Report");
 
     for (int i = 0; i < SIZE_COLUMNS_EMPLOYEE; ++i) {
         printf(" %s", COLUMNS_EMPLOYEE[i]);
@@ -507,13 +512,10 @@ void displayEmployees(int STATUS) {
 
     printf("\n");
 
-    for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
-
-        if (STATUS == EMP_MAX_PROJECTS
-            && ALL_EMP_ARRAY[i].engagedProjects == EMP_MAX_PROJECTS) {
-            printSingleLineEmployee(ALL_EMP_ARRAY[i]);
-        } else if (ALL_EMP_ARRAY[i].engagedProjects < EMP_MAX_PROJECTS) {
-            printSingleLineEmployee(ALL_EMP_ARRAY[i]);
+    if (STATUS == EMP_MAX_PROJECTS || STATUS == 0) {
+        for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
+            if (ALL_EMP_ARRAY[i].engagedProjects == STATUS)
+                printSingleLineEmployee(ALL_EMP_ARRAY[i]);
         }
     }
 }
@@ -573,9 +575,14 @@ struct Project getProjectById(int projectId) {
     }
 }
 
-// -------------> Print ALL Data for testing
+
+// INTERNAL - NO DIRECT CALL ---> Print ALL Data for testing
 
 void testPrintClients() {
+
+    printf("\n\nDATA OF FILE CLIENT:");
+    printColumnsClient();
+
     for (int i = 0; i < ALL_CLIENT_ARRAY_SIZE; ++i) {
         struct Client client = ALL_CLIENT_ARRAY[i];
         printSingleLineClient(client);
@@ -583,6 +590,9 @@ void testPrintClients() {
 }
 
 void testPrintEmployees() {
+
+    printf("\n\nDATA OF FILE EMPLOYEE:");
+    printColumnsEmployee();
     for (int i = 0; i < ALL_EMP_ARRAY_SIZE; ++i) {
         struct Employee emp1 = ALL_EMP_ARRAY[i];
         printSingleLineEmployee(emp1);
@@ -590,6 +600,9 @@ void testPrintEmployees() {
 }
 
 void testPrintMembers() {
+
+    printf("\n\nDATA OF FILE MEMBER:");
+    printColumnsMember();
     for (int i = 0; i < ALL_MEMBER_ARRAY_SIZE; ++i) {
         struct Member member = ALL_MEMBER_ARRAY[i];
         printSingleLineMember(member);
@@ -597,6 +610,9 @@ void testPrintMembers() {
 }
 
 void testPrintProjects() {
+
+    printf("\n\nDATA OF FILE PROJECT:");
+    printColumnsProject();
     for (int i = 0; i < ALL_PROJECT_ARRAY_SIZE; ++i) {
         struct Project p1 = ALL_PROJECT_ARRAY[i];
         printSingleLineProject(p1);
@@ -604,8 +620,46 @@ void testPrintProjects() {
 }
 
 void testPrintLogins() {
+
+    printf("\n\nDATA OF FILE LOGIN:");
+    printColumnsLogin();
     for (int i = 0; i < ALL_LOGIN_ARRAY_SIZE; ++i) {
         struct Login login = ALL_LOGIN_ARRAY[i];
         printSingleLineLogin(login);
     }
+}
+
+void testPrintRowsSize() {
+
+    printf("\n\nNUMBER OF ROWS IN EACH FILE:\n");
+
+    printf("\nProject Rows = %d ", ALL_PROJECT_ARRAY_SIZE);
+    printf("\nEmployee Rows = %d ", ALL_EMP_ARRAY_SIZE);
+    printf("\nClient Rows = %d ", ALL_CLIENT_ARRAY_SIZE);
+    printf("\nMember Rows = %d ", ALL_MEMBER_ARRAY_SIZE);
+    printf("\nLogin Rows = %d ", ALL_LOGIN_ARRAY_SIZE);
+}
+
+void testUpdatingMethods() {
+    updateProjectFile();
+    updateMemberFile();
+    updateClientFile();
+    updateMemberFile();
+    updateLoginFile();
+}
+
+// --------> Testing Methods
+
+void performDatabaseTesting() {
+
+    testUpdatingMethods();
+
+    testPrintEmployees();
+    testPrintMembers();
+    testPrintProjects();
+    testPrintLogins();
+    testPrintClients();
+
+    testPrintRowsSize();
+
 }

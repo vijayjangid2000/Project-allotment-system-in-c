@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include<windows.h>
+#include "databaseHelper.h"
 
 int validate(char *buf) {
     int i;
@@ -81,7 +82,7 @@ void addClient(int projectId) {
         case 3:
             printf("\nEnter Client's Mobile Number: ");
             scanf("%s", &client.contactMob);
-            if (strlen(client.contactMob) == 10 && isNumericString(client.contactMob) == 1) {
+            if (strlen(client.contactMob) == 10 /*&& isNumericString(client.contactMob) == 1*/) {
                 printf(" ");
                 operation++;
             } else printf("\nInvalid Input");
@@ -121,7 +122,7 @@ void addProjectToCompany() {
     project.managerId = -1;
 
     fflush(stdin);
-    created = getSystemDate();
+    created = getSystemDateB();
     char s[100];
     sprintf(s, "%d", created);
     strcpy(project.createdOn, s);

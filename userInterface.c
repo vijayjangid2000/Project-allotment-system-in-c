@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "databaseHelper.h"
 
 void admin();
 void manager();
@@ -125,7 +126,7 @@ void AllotEmployeesToProject() {
     }
 }
 
-void displayMembers() {
+void displayMembers2() {
     system("cls");
     int goBack;
 
@@ -200,7 +201,7 @@ void manager() {
             AllotEmployeesToProject();
             break;
         case 4:
-            displayMembers();
+            displayMembers2();
             break;
 
         case 0:

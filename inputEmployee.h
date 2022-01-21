@@ -2,8 +2,8 @@
 // Created by Lenovo on 21-01-2022.
 //
 
-#ifndef UNTITLED_INPUTEMP_H
-#define UNTITLED_INPUTEMP_H
+#ifndef UNTITLED_INPUTEMPLOYEE_H
+#define UNTITLED_INPUTEMPLOYEE_H
 
 int isNumericString(char str[]);
 
@@ -19,4 +19,4 @@ int experienceValidate(char dob[]);
 
 void addNewEmployee();
 
-#endif //UNTITLED_INPUTEMP_H
+#endif //UNTITLED_INPUTEMPLOYEE_H

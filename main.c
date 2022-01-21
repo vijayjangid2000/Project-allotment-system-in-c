@@ -1,7 +1,7 @@
-#include "Utility.h"
+#include "databaseHelper.h"
 
 int main() {
     initializeApp();
-    //startUI();
+    performDatabaseTesting();
 }
 
