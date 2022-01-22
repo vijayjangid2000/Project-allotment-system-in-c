@@ -7,50 +7,70 @@
 
 #include "databaseHelper2.h"
 
-
 const char INVALID_INPUT[100] = "\nInvalid Input, Enter again: ";
 
 bool isValidName(const char s[]) {
 
-    unsigned char c;
-    while ((c = *s) && (isalpha(c) || isblank(c))) ++s;
+    bool correctAlpha = true;
+    for (int i = 0; i < strlen(s); ++i) {
+        if (!isalpha(s[i]) && s[i] != ' ') {
+            correctAlpha = false;
+            break;
+        }
+    }
+
     int nameLength = strlen(s);
 
     if(true) return true;
     bool correctLength = nameLength > 0 && nameLength < 25;
-    return (*s == '\0' && correctLength);
+    return (correctAlpha && correctLength);
 }
 
-bool isValidJoiningDate() {
-
+bool isValidJoiningDate(char date[])
     return true;
 }
 
-bool isValidDesignation() {
-    return true;
+bool isValidDesignation(int desig) {
+    if (desig < SIZE_DESIG && desig >= 0) return true;
+    else return false;
 }
 
 bool isValidEmail(char mailId[]) {
     return true;
 }
 
-bool isValidMobile() {
+bool isValidMobile(char mob[]) {
+    int flag = 1, i = 0;
+    while (i < strlen(mob)) {
+        if (!isdigit(mob[i])) {
+            flag = 0;
+            break;
+        } else {
+            i = i + 1;
+        }
+    }
+    if (flag == 1) return true;
+    else return false;
+}
+
+bool isValidManagerId(int id, int totalManager) {
     return true;
 }
 
-bool isValidManagerId() {
+bool isValidDob(char dob[]) {
     return true;
 }
 
-bool isValidDob() {
+bool isValidPrevExperience(int prevExp) {
     return true;
 }
 
-bool isValidPrevExperience() {
+bool isValidDomain(int domainId) {
     return true;
 }
 
-bool isValidDomain() {
+bool isValidPassword(char password[]) {
+
     return true;
 }
 
@@ -121,6 +141,7 @@ void addNewEmployee() {
             fflush(stdin);
 
             // Print all managers, choose one id from it
+            int numOfManagers = showManagers();
             if (isValidManagerId()) operation++;
             else printf(INVALID_INPUT);
 
@@ -171,5 +192,9 @@ void addNewEmployee() {
     if (input != 'y' && input != 'n')goto askAgain;
     else if (input == 'y')printSingleLineEmployee(newEmp);
 
+    // saving data into database
+    updateEmployeeFile();
+
+    // call main menu
 
 }

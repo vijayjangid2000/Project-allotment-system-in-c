@@ -574,6 +574,28 @@ void displayEmployeesForProject(int projectId) {
     }
 }
 
+int showManagers() {
+
+    for (int i = 0; i < SIZE_COLUMNS_EMPLOYEE; ++i)
+        printf(" %s", COLUMNS_EMPLOYEE[i]);
+
+    int totalManagers();
+    printf("\n");
+    for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
+
+        printf("");
+        if (ALL_EMP_ARRAY[i].designation == EMP_DESIG_MANAGER) {
+            struct Employee e = ALL_EMP_ARRAY[i] ;
+            printf("\n%d. %s %s", i + 1, e.name, e.designation);
+            printSingleLineEmployee(ALL_EMP_ARRAY[i]);
+        }
+    }
+
+    return totalManagers();
+}
+
+
+
 // -------> GET STRUCTURES BY ID'S
 
 struct Employee getEmployeeById(int empId) {

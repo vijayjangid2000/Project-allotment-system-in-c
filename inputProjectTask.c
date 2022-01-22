@@ -5,30 +5,65 @@
 #include<windows.h>
 #include "databaseHelper2.h"
 
+const char INVALID_INPUT[100] = "\nInvalid Input, Enter again: ";
 
-bool isValidProjectName() {
-
-    return true;
+bool isValidProjectName(char name[]) {
+    if (strlen(name) <= 100 && strlen(name) != 0) {
+        return true;
+    }
+    return false;
 }
 
-bool isValidStatus() {
+bool isValidDeadLine(char date[]) {
+    char *pch;
+    int month = 0, day = 0, year = 0;
+    pch = strtok(date, "/");
+    while (pch != NULL) {
+        int num = atoi(pch);
+        if (day == 0) day = num;
+        else if (month == 0) month = num;
+        else if (year == 0) year = num;
+        pch = strtok(NULL, "/");
+    }
+    if ((month >= 1 && month <= 12) && (year >= 2022 && year <= 2022 + 50)) {
+        if (month % 2 == 0 && month != 2) {
+            if (month < 7) {
+                if (day >= 1 && day <= 30) {
+                    return true;
+                }
+            } else {
+                if (day >= 1 && day <= 31) {
+                    return true;
+                }
+            }
+        } else if (month == 2) {
+            if (day >= 1 && day <= 28) {
+                return true;
+            }
+        } else if (month % 2 != 0) {
+            if (month <= 7) {
+                if (day >= 1 && day <= 31) {
+                    return true;
+                }
+            } else {
+                if (day >= 1 && day <= 30) {
+                    return true;
+                }
+            }
+        } else {
+            return false;
+        }
 
-    return true;
+    }
+    // dd/mm/yyyy
+    return false;
 }
 
-bool isValidDeadLine() {
-
-    return true;
-}
-
-bool isValidDescription() {
-
-    return true;
-}
-
-bool isValidCreatedOn() {
-
-    return true;
+bool isValidDescription(char description[]) {
+    if (strlen(description) < 200 && strlen(description) > 1) {
+        return true;
+    }
+    return false;
 }
 
 bool isValidEmployeeNeeded() {
@@ -46,14 +81,15 @@ bool isValidNumOfMinExperience() {
     return true;
 }
 
-bool isValidBilled() {
+bool isValidBilled(int input){
 
-    return true;
 }
 
-bool isValidDomainExpertId() {
-
-    return true;
+bool isValidDomainExpertId(int domainExpertId) {
+    if (domainExpertId >= 1 && domainExpertId <= 5) {
+        return true;
+    }
+    return false;
 }
 
 bool isValidClientName() {
@@ -215,11 +251,8 @@ void addProjectToCompany() {
             printf("\nEnter Client's Name: ");
             gets(name);
 
-            if (isValidClientName() == true) {
-                strcpy(client.personName, name);
-                nextCase++;
-            } else
-                printf("\nInvalid Input.");
+            if (isValidClientName(client.personName)) nextCase++;
+            else printf(INVALID_INPUT);
             break;
 
         case 2:

@@ -1,5 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include "loginEmpTask.h"
+#include "databaseHelper2.h"
+
+
 
 void admin();
 
@@ -238,9 +243,9 @@ void startUI() {
 
     int ch;
 
-    printf("\n\n\n\t\t1.Login");
+    printf("\n1.Login: ");
 
-    printf("\n\n\n\t\tEnter Your Choice : ");
+    printf("\n\n\n\t\tEnter Your Choice: ");
     scanf("%d", &ch);
     switch (ch) {
         case 1:
@@ -264,4 +269,71 @@ void printNewTab(int count) {
     for (int i = 0; i < count; ++i) {
         printf("\t");
     }
+}
+
+void exampleCode() {
+    int role = loginTask();
+    if (role == LOGIN_ROLE_ADMIN) {
+
+    } else (role == LOGIN_ROLE_MANAGER)
+    {
+
+    }
+}
+
+void showManagerOptions() {
+
+
+    int operation = 1;
+    bool isInvalidOutput = false;
+    takeInputAgain:
+
+    scanf("%d", &operation);
+
+    switch (operation) {
+        case 0:
+            // call allotment method
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        default:
+            "Invalid Output";
+            isInvalidOutput = true;
+            break;
+    }
+    if (isInvalidOutput) goto takeInputAgain;
+
+}
+
+void showAdminOptions() {
+    int operation = 1;
+    bool isInvalidOutput = false;
+    takeInputAgain:
+
+    scanf("%d", &operation);
+
+    switch (operation) {
+        case 0:
+            // call allotment method
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        default:
+            "Invalid Output";
+            isInvalidOutput = true;
+            break;
+    }
+    if (isInvalidOutput) goto takeInputAgain;
+}
+
+void showLogoutPage() {
+    printf("Logout Successful");
 }
