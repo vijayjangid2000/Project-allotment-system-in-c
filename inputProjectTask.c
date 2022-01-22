@@ -5,144 +5,101 @@
 #include<windows.h>
 #include "databaseHelper2.h"
 
-int validate(char *buf) {
-    int i;
-    for (i = 0; i < strlen(buf); ++i)
-        if (!isalpha(buf[i]) && buf[i] != ' ') // missing index
-            return 0;
-    return 1;
+
+bool isValidProjectName() {
+
+    return true;
 }
 
-bool isEmailValidB(char mailId[]) {
-    int i, p1, p2;
-    p1 = p2 = 0;
-    for (i = 0; mailId[i] != '\0'; i++) {
-        if (mailId[i] == '@')
-            p1 = i;
-        else if (mailId[i] == '.')
-            p2 = i;
-    }
-    if (p1 > 3 && (p2 - p1) > 3)
-        return true;
-    else
-        return false;
+bool isValidStatus() {
 
+    return true;
 }
 
-int getSystemDateB() {
-    char str[100];
-    int result = 0;
-    SYSTEMTIME s;
-    GetSystemTime(&s);
-    if (s.wMonth < 10) {
-        int i = s.wYear, j = s.wMonth, k = s.wDay;
-        sprintf(str, "%d0%d%d", i, j, k);
-        result = strtol(str, NULL, 10);
+bool isValidDeadLine() {
 
-    } else {
-        int i = s.wYear, j = s.wMonth, k = s.wDay;
-        sprintf(str, "%d%d%d", i, j, k);
-        result = strtol(str, NULL, 10);
-    }
-    return result;
+    return true;
+}
+
+bool isValidDescription() {
+
+    return true;
+}
+
+bool isValidCreatedOn() {
+
+    return true;
+}
+
+bool isValidEmployeeNeeded() {
+
+    return true;
+}
+
+bool isValidMinimumExperience() {
+
+    return true;
+}
+
+bool isValidNumOfMinExperience() {
+
+    return true;
+}
+
+bool isValidBilled() {
+
+    return true;
+}
+
+bool isValidDomainExpertId() {
+
+    return true;
+}
+
+bool isValidClientName() {
+
+    return true;
+}
+
+bool isValidCompanyName() {
+
+    return true;
+}
+
+bool isValidMobileNumber() {
+
+    return true;
 }
 
 // <------------------------------------->
 
-void addClient(int projectId) {
-
-    struct Client client;
-    char email[100], name[20];
-
-    client.projectId = projectId;
-
-    client.clientId = ALL_CLIENT_ARRAY_SIZE;
-
-    int operation = 1;
-    retake:
-    switch (operation) {
-        case 1:
-            printf("\nEnter Client's Name: ");
-            gets(name);
-
-            if (validate(name) == 1) {
-                strcpy(client.personName, name);
-                operation++;
-            } else
-                printf("\nInvalid Input.");
-            break;
-
-        case 2:
-            printf("\nEnter Client's Company Name: ");
-            gets(client.companyName);
-            if (strlen(client.companyName) > 2) operation++;
-            else printf("\nInvalid Input.");
-            break;
-
-        case 3:
-            printf("\nEnter Client's Mobile Number: ");
-            scanf("%s", &client.contactMob);
-            if (strlen(client.contactMob) == 10 /*&& isNumericString(client.contactMob) == 1*/) {
-                printf(" ");
-                operation++;
-            } else printf("\nInvalid Input");
-            break;
-
-        case 4:
-            printf("\nEnter Client's Email:");
-            scanf("%s", &email);
-            if (isEmailValidB(email)) {
-                strcpy(client.contactEmail, email);
-                operation++;
-            } else {
-                printf("(Invalid Email)");
-                printf("\nEmail:");
-                scanf("%s", &email);
-
-            }
-            break;
-    }
-    if (operation <= 4)goto retake;
-    printSingleLineClient(client);
-
-    ALL_CLIENT_ARRAY[ALL_CLIENT_ARRAY_SIZE] = client;
-    ALL_CLIENT_ARRAY_SIZE++;
-}
-
 void addProjectToCompany() {
-    int deadline, created;
-    int number;
+
+    int number, deadline, created;
 
     struct Project project;
 
     project.id = ALL_PROJECT_ARRAY_SIZE;
-
     project.status = PROJECT_STATUS_IDLE;
-
     project.managerId = -1;
 
-    fflush(stdin);
-    created = getSystemDateB();
-    char s[100];
-    sprintf(s, "%d", created);
-    strcpy(project.createdOn, s);
+    int nextCase = 1;
 
-    int operation = 1;
-    retake:
-    switch (operation) {
+    back1:
+    switch (nextCase) {
 
         case 1:
             fflush(stdin);
             printf("\nEnter Project Name: ");
             gets(project.name);
-            operation++;
+            nextCase++;
             break;
 
         case 2:
             fflush(stdin);
             printf("\nDescription: ");
             gets(project.description);
-            operation++;
+            nextCase++;
             break;
 
         case 3:
@@ -153,7 +110,7 @@ void addProjectToCompany() {
                 char s1[10];
                 sprintf(s1, "%d", deadline);
                 strcpy(project.deadLine, s1);
-                operation++;
+                nextCase++;
             } else {
                 printf("\nInvalid Date. Enter again: ");
             }
@@ -164,7 +121,7 @@ void addProjectToCompany() {
             fflush(stdin);
             printf("\nHow many employees will be needed for this project?");
             scanf("%d", &project.numOfEmpNeeded);
-            operation++;
+            nextCase++;
             break;
 
         case 5:
@@ -185,7 +142,7 @@ void addProjectToCompany() {
 
                 if (project.numOfEmpNeeded >= project.minExpEmpNum) {
                     project.minExpEmpNum = project.minExpEmpNum;
-                    operation++;
+                    nextCase++;
                 } else printf("\nInvalid Input, Number greater than total employee in project. \nEnter again: ");
             } else {
                 project.minExperience = 0;
@@ -201,10 +158,10 @@ void addProjectToCompany() {
             number = 1;
             if (number == 1) {
                 project.isBilled = PROJECT_BILLED;
-                operation++;
+                nextCase++;
             } else if (number == 2) {
                 project.isBilled = PROJECT_NOT_BILLED;
-                operation++;
+                nextCase++;
             } else {
                 printf("\n Invalid Input");
             }
@@ -219,10 +176,10 @@ void addProjectToCompany() {
 
             if (number == 1) {
                 project.domainExpertId = 1; // giving value other than zero
-                operation++;
+                nextCase++;
             } else if (number == 2) {
                 project.domainExpertId = 0;
-                operation++;
+                nextCase++;
             } else {
                 printf("\nInvalid Input");
             }
@@ -236,19 +193,78 @@ void addProjectToCompany() {
                 printf("\nSelect one: ");
                 scanf("%d", &project.domainExpertId);
             }
-            operation++;
+            nextCase++;
             break;
     }
-    if (operation <= 8) goto retake;
+    if (nextCase <= 8) goto back1;
 
     project.clientId = SIZE_COLUMNS_CLIENT;
     printSingleLineProject(project);
 
-    addClient(project.id);
+    struct Client client;
+    char email[100], name[20];
+
+    client.projectId = project.id;
+    client.clientId = ALL_CLIENT_ARRAY_SIZE;
+
+    nextCase = 1;
+
+    again:
+    switch (nextCase) {
+        case 1:
+            printf("\nEnter Client's Name: ");
+            gets(name);
+
+            if (isValidClientName() == true) {
+                strcpy(client.personName, name);
+                nextCase++;
+            } else
+                printf("\nInvalid Input.");
+            break;
+
+        case 2:
+            printf("\nEnter Client's Company Name: ");
+            gets(client.companyName);
+            if (strlen(client.companyName) > 2) nextCase++;
+            else printf("\nInvalid Input.");
+            break;
+
+        case 3:
+            printf("\nEnter Client's Mobile Number: ");
+            scanf("%s", &client.contactMob);
+            if (strlen(client.contactMob) == 10) {
+                printf(" ");
+                nextCase++;
+            } else printf("\nInvalid Input");
+            break;
+
+        case 4:
+            printf("\nEnter Client's Email:");
+            scanf("%s", &email);
+            if (true) {
+                strcpy(client.contactEmail, email);
+                nextCase++;
+            } else {
+                printf("(Invalid Email)");
+                printf("\nEmail:");
+                scanf("%s", &email);
+
+            }
+            break;
+    }
+    if (nextCase <= 4)goto back1;
+
+    printSingleLineClient(client);
+
+    printf("Project Added Successfully");
+
+    ALL_CLIENT_ARRAY[ALL_CLIENT_ARRAY_SIZE] = client;
+    ALL_CLIENT_ARRAY_SIZE++;
 
     ALL_PROJECT_ARRAY[ALL_PROJECT_ARRAY_SIZE] = project;
     ALL_PROJECT_ARRAY_SIZE++;
 
-    printf("Project Added Successfully");
-
+    // Now Update file
+    updateProjectFile();
+    updateClientFile();
 }

@@ -7,11 +7,10 @@
 
 int main() {
     initializeApp();
-    //performDatabaseTesting();
-    // loginTask();
-
-    //addNewEmployee();
-
-    addProjectToCompany();
+    // performDatabaseTesting();
+     loginTask();
+    // addNewEmployee(); // Rishabh
+    // addProjectToCompany(); // Bhavya
+    // startUI();
 }
 

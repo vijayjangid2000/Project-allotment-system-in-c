@@ -95,7 +95,7 @@ extern const char FORMAT_PRINT_LOGIN[];
 extern const char DOMAIN_ARRAY[][50];
 extern const int SIZE_DOMAIN;
 
-extern const char DESIG_ARRAY_EMP[][50];
+extern const char DESIG_ARRAY_EMP[][20];
 extern const int SIZE_DESIG;
 
 extern const char COLUMNS_PROJECT[][50];

@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 void admin();
+
 void manager();
 
 void mainExit() {
@@ -250,4 +251,17 @@ void startUI() {
             printf("\n\nThanks.....\n\n");
     }
 
+
+}
+
+void printNewLines(int count) {
+    for (int i = 0; i < count; ++i) {
+        printf("\n");
+    }
+}
+
+void printNewTab(int count) {
+    for (int i = 0; i < count; ++i) {
+        printf("\t");
+    }
 }

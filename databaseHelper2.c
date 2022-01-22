@@ -54,7 +54,7 @@ const int SIZE_COLUMNS_CLIENT = 6;
 const int SIZE_COLUMNS_LOGIN = 4;
 const int SIZE_COLUMNS_PROJECT = 13;
 
-const char DESIG_ARRAY_EMP[3][100] = {"Manager", "Admin", "Worker"};
+const char DESIG_ARRAY_EMP[3][20] = {"Manager", "Admin", "Worker"};
 const int SIZE_DESIG = 3;
 
 const char COLUMNS_PROJECT[13][50] = {"Id", "Name", "Status", "DeadLine", "Description",
