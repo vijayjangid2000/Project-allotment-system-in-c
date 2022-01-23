@@ -39,11 +39,12 @@ const char FORMAT_MEMBER[100] = "%d|%d|%d";
 const char FORMAT_CLIENT[100] = "%d|%s|%s|%s|%s|%d";
 const char FORMAT_LOGIN[100] = "%s|%s|%d|%d";
 
-const char FORMAT_PRINT_PROJECT[100] = "\n%d %s %d %s %s %s %d %d %d %d %d %d %d";
-const char FORMAT_PRINT_EMPLOYEE[100] = "\n%d %s %s %d %s %s %d %d %s %d %d";
-const char FORMAT_PRINT_MEMBER[100] = "\n%d %d %d";
-const char FORMAT_PRINT_CLIENT[100] = "\n%d %s %s %s %s %d"; // IF LAST IS %s THEN NO NEED OF \n
-const char FORMAT_PRINT_LOGIN[100] = "\n%s %s %d %d";
+const char FORMAT_PRINT_PROJECT[100] = "\n%d  %s  %d  %s  %s  %s  %d  %d  %d  %d  %d  %d  %d";
+const char FORMAT_PRINT_EMPLOYEE[100] = "\n%d  %s  %s  %d  %s  %s  %d  %d  %s  %d  %d";
+const char FORMAT_PRINT_EMPLOYEE_WITH_ROLE[100] = "\n%d  %s  %s  %d  %s  %s  %d  %d  %s  %d  %d";
+const char FORMAT_PRINT_MEMBER[100] = "\n%d  %d  %d";
+const char FORMAT_PRINT_CLIENT[100] = "\n%d  %s  %s  %s  %s  %d"; // IF LAST IS %s THEN NO NEED OF \n
+const char FORMAT_PRINT_LOGIN[100] = "\n%s  %s  %d  %d";
 
 const char INVALID_INPUT[100] = "\nInvalid Input, Enter again: ";
 
@@ -52,6 +53,7 @@ const char DOMAIN_ARRAY[5][100] = {"Finance", "Banking", "Data Science",
 
 const int SIZE_DOMAIN = 5;
 const int SIZE_COLUMNS_EMPLOYEE = 11;
+const int SIZE_COLUMNS_EMPLOYEE_WITH_ROLE = 12;
 const int SIZE_COLUMNS_MEMBER = 3;
 const int SIZE_COLUMNS_CLIENT = 6;
 const int SIZE_COLUMNS_LOGIN = 4;
@@ -68,6 +70,10 @@ const char COLUMNS_PROJECT[13][50] = {"Id", "Name", "Status", "DeadLine", "Descr
 const char COLUMNS_EMPLOYEE[11][50] = {"Id", "Name", "JoiningDate", "Designation", "Email",
                                        "Mobile", "ManagerId", "numOfProjects", "Dob",
                                        "Experience", "DomainExpert"};
+
+const char COLUMNS_EMPLOYEE_WITH_ROLE[12][50] = {"Id", "Name", "JoiningDate", "Designation", "Email",
+                                                 "Mobile", "ManagerId", "numOfProjects", "Dob",
+                                                 "Experience", "DomainExpert", "RoleInProject"};
 
 const char COLUMNS_MEMBER[3][50] = {"ProjectId", "EmpId", "EmpRole"};
 const char COLUMNS_CLIENT[6][50] = {"Id", "Name", "Company",
@@ -145,6 +151,21 @@ int ALL_LOGIN_ARRAY_SIZE = 0;
 struct Client ALL_CLIENT_ARRAY[100];
 int ALL_CLIENT_ARRAY_SIZE = 0;
 
+// --------> INTERNAL USE FUNCTIONS
+
+void sortArray(int array[], int size) {
+    int i, j, temp;
+    for (i = 0; i < size; i++) {
+        for (j = i + 1; j < size; j++) {
+            if (array[i] > array[j]) {
+                temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+    }
+}
+
 // SINGLE LINE PRINTING
 
 void printSingleLineProject(struct Project project) {
@@ -194,6 +215,7 @@ void printColumnsProject() {
     }
     printf("\n");
 }
+
 
 void printColumnsEmployee() {
     printf("\n\n");
@@ -260,7 +282,8 @@ void updateEmployeeFile() {
     for (int i = 0; i < ALL_EMP_ARRAY_SIZE; ++i) {
         if (i != 0) fprintf(employeeFile, "%s", "\n");
         fprintf(employeeFile, FORMAT_EMPLOYEE,
-                ALL_EMP_ARRAY[i].id, ALL_EMP_ARRAY[i].name, ALL_EMP_ARRAY[i].joiningDate, ALL_EMP_ARRAY[i].designation,
+                ALL_EMP_ARRAY[i].id, ALL_EMP_ARRAY[i].name, ALL_EMP_ARRAY[i].joiningDate,
+                ALL_EMP_ARRAY[i].designation,
                 ALL_EMP_ARRAY[i].email,
                 ALL_EMP_ARRAY[i].mobile, ALL_EMP_ARRAY[i].managerId, ALL_EMP_ARRAY[i].engagedProjects,
                 ALL_EMP_ARRAY[i].dob, ALL_EMP_ARRAY[i].prevExperience, ALL_EMP_ARRAY[i].domainExpert);
@@ -518,13 +541,73 @@ void initializeApp() {
     getDataOfLoginTable();
 }
 
+// ------------> COUNT FUNCTIONS
+
+int getCountProjectByStatus(int status) {
+
+    int projectsCount = 0;
+
+    for (int i = 0; i < ALL_PROJECT_ARRAY_SIZE; ++i) {
+        struct Project temp = ALL_PROJECT_ARRAY[i];
+        if (temp.status == status) {
+            projectsCount++;
+        }
+    }
+    return projectsCount;
+}
+
+int getCountWorkingEmployeesInProject(int projectId) {
+
+    int empCount = 0;
+
+    for (int i = 0; i < ALL_PROJECT_ARRAY_SIZE; ++i) {
+        struct Project temp = ALL_PROJECT_ARRAY[i];
+        if (temp.id == projectId) {
+            empCount = temp.numOfEmpNeeded;
+        }
+    }
+    return empCount;
+}
+
+int getCountEmployeeByStatus(int empStatus) {
+
+    int count = 0;
+
+    if (empStatus == EMP_MAX_PROJECTS || empStatus == 0) {
+        for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
+            if (ALL_EMP_ARRAY[i].engagedProjects == empStatus) count++;
+        }
+    }
+
+    return count;
+
+}
+
+int getCountProjectsByBilling(int billed) {
+    int projectsCount = 0;
+
+    for (int i = 0; i < ALL_PROJECT_ARRAY_SIZE; ++i) {
+        struct Project temp = ALL_PROJECT_ARRAY[i];
+        if (temp.isBilled == billed) {
+            projectsCount++;
+        }
+    }
+    return projectsCount;
+}
+
+int getCountAllProjects() {
+    return ALL_PROJECT_ARRAY_SIZE;
+}
+
+int getCountAllEmployees() {
+    return ALL_EMP_ARRAY_SIZE;
+}
+
 // -------> REPORTS WORK
 
 void displayEmployeesByWorkStatus(int STATUS) {
 
-    for (int i = 0; i < SIZE_COLUMNS_EMPLOYEE; ++i) {
-        printf(" %s", COLUMNS_EMPLOYEE[i]);
-    }
+    printColumnsEmployee();
 
     printf("\n");
 
@@ -560,11 +643,7 @@ void displayAllProjects() {
 
 void displayAllEmployees() {
 
-    printf("Employee Report");
-
-    for (int i = 0; i < SIZE_COLUMNS_EMPLOYEE; ++i) {
-        printf(" %s", COLUMNS_EMPLOYEE[i]);
-    }
+    printColumnsEmployee();
 
     printf("\n");
 
@@ -576,13 +655,34 @@ void displayAllEmployees() {
 
 void displayEmployeesForProject(int projectId) {
 
-    for (int i = 0; i < SIZE_COLUMNS_EMPLOYEE; ++i)
-        printf(" %s", COLUMNS_EMPLOYEE[i]);
+    int empIdArray[100];
+
+    int sizeEmpArray = 0;
+    int empWorkingInProject = getCountWorkingEmployeesInProject(projectId);
+    for (int i = 0; i < SIZE_COLUMNS_MEMBER; ++i) {
+        struct Member member = ALL_MEMBER_ARRAY[i];
+        if (member.projectId == projectId) {
+            empIdArray[sizeEmpArray++] = member.empId;
+            if (sizeEmpArray == empWorkingInProject) break;
+        }
+    }
+
+    // now we have all employees working in that project
+    sortArray(empIdArray, sizeEmpArray);
+
+    for (int i = 0; i < SIZE_COLUMNS_EMPLOYEE_WITH_ROLE; ++i)
+        printf("%s ", COLUMNS_EMPLOYEE_WITH_ROLE[i]);
 
     printf("\n");
     for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
-        if (ALL_EMP_ARRAY[i].id == projectId)
-            printSingleLineEmployee(ALL_EMP_ARRAY[i]);
+
+        struct Employee emp = ALL_EMP_ARRAY[i];
+        for (int j = 0; j < sizeEmpArray; ++j) {
+            if (empIdArray[i] == emp.id) {
+                printSingleLineEmployee(emp);
+                break;
+            }
+        }
     }
 }
 
@@ -599,8 +699,7 @@ void displayClientByProjectId(int projectId) {
 }
 
 void displayEmployeesByDesignation(int designation) {
-    for (int i = 0; i < SIZE_COLUMNS_EMPLOYEE; ++i)
-        printf(" %s", COLUMNS_EMPLOYEE[i]);
+    printColumnsEmployee();
 
     printf("\n");
     for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
@@ -640,59 +739,6 @@ int showAllManagersCustom() {
     }
 
     return totalManagers;
-}
-
-void displayEmployeesByDesignation(int designation);
-
-void displayAllClients();
-
-// ------------> COUNT FUNCTIONS
-
-int getCountProjectByStatus(int status) {
-
-    int projectsCount = 0;
-
-    for (int i = 0; i < ALL_PROJECT_ARRAY_SIZE; ++i) {
-        struct Project temp = ALL_PROJECT_ARRAY[i];
-        if (temp.status == status) {
-            projectsCount++;
-        }
-    }
-    return projectsCount;
-}
-
-int getCountEmployeeByStatus(int empStatus) {
-
-    int count = 0;
-
-    if (empStatus == EMP_MAX_PROJECTS || empStatus == 0) {
-        for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
-            if (ALL_EMP_ARRAY[i].engagedProjects == empStatus) count++;
-        }
-    }
-
-    return count;
-
-}
-
-int getCountProjectsByBilling(int billed) {
-    int projectsCount = 0;
-
-    for (int i = 0; i < ALL_PROJECT_ARRAY_SIZE; ++i) {
-        struct Project temp = ALL_PROJECT_ARRAY[i];
-        if (temp.isBilled == billed) {
-            projectsCount++;
-        }
-    }
-    return projectsCount;
-}
-
-int getCountAllProjects() {
-    return ALL_PROJECT_ARRAY_SIZE;
-}
-
-int getCountAllEmployees() {
-    return ALL_EMP_ARRAY_SIZE;
 }
 
 // -------> GET STRUCTURES BY ID'S
@@ -803,3 +849,27 @@ void performDatabaseTesting() {
 void simpleTest() {
     printf("Checking Simple calling");
 }
+
+// --------> INPUT EASE
+
+int inputTakeInt(int startRange, int endRange) {
+    int input;
+    printf("\nEnter your choice: ");
+    scanf("%d", &input);
+    if (input >= startRange && input <= endRange) {
+        return input;
+    } else {
+        if (startRange == endRange) printf("\nInvalid (Enter %d)", startRange);
+        else if (endRange - startRange == 1) printf("\nInvalid (Enter %d or %d)", startRange, endRange);
+        else printf("\nInvalid (Enter between %d and %d)", startRange, endRange);
+        return inputTakeInt(startRange, endRange);
+    }
+
+}
+
+void printList(char a[30][100], int size) {
+    for (int i = 0; i < size; ++i) {
+        printf("\n%d. ", a[i]);
+    }
+}
+

@@ -22,7 +22,7 @@ void decrypt(char password[]) {
 
 int loginTask() {
 
-    printf("\nWelcome to Appcino\n\n Please Enter Account Details\n\n");
+    printf("\nWelcome to Appcino\n");
     struct Login loggedInUser;
 
     char userName[100], password[100];
@@ -37,7 +37,7 @@ int loginTask() {
         goto again1;
     }
 
-    printf("\nEnter Password: ");
+    printf("Enter Password: ");
     again2:
     fflush(stdin);
     gets(password);
@@ -77,11 +77,10 @@ int loginTask() {
     }
 
     struct Employee emp = getEmployeeById(loggedInUser.empId);
-    printf("\nWelcome Back %s", emp.name);
+    printf("\nWelcome Back, %s!\n\n", emp.name);
 
     if (loggedInUser.role == EMP_DESIG_ADMIN) return EMP_DESIG_ADMIN;
     if (loggedInUser.role == EMP_DESIG_MANAGER) return EMP_DESIG_MANAGER;
-
 }
 
 

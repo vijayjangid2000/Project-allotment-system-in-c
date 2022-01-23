@@ -249,4 +249,10 @@ void performDatabaseTesting();
 
 void simpleTest();
 
+// --------> INPUT EASE
+
+int inputTakeInt(int startRange, int endRange);
+
+void printList(char a[30][100], int size);
+
 #endif //UNTITLED_ADBHELPER_H

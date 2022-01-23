@@ -5,28 +5,13 @@
 #include "addProject.h"
 #include "allotment.h"
 
-const char logoutMessage[100] = "\n\nLogout Successful";
+const char logoutMessage[100] = "\nLogout Successful :)\nExiting App.\n";
 
 void showAdminOptions();
 
 void showManagerOptions();
 
-int inputTakeInt(int startRange, int endRange) {
-    int input;
-    printf("\nEnter your choice: ");
-    scanf("%d", &input);
-    if (input >= startRange && input <= endRange) {
-        return input;
-    } else {
-        if (startRange == endRange) printf("\nInvalid (Enter %d)", startRange);
-        else if (endRange - startRange == 1) printf("\nInvalid (Enter %d or %d)", startRange, endRange);
-        else printf("\nInvalid (Enter between %d and %d)", startRange, endRange);
-        return inputTakeInt(startRange, endRange);
-    }
-
-}
-
-void showLoginDashboard(){
+void showLoginDashboard() {
     int who = loginTask();
     if (who == EMP_DESIG_ADMIN) showAdminOptions();
     else if (who == EMP_DESIG_MANAGER) showManagerOptions();
@@ -57,7 +42,7 @@ void showAdminOptions() {
 
         case 0:
             printf(logoutMessage);
-            showLoginDashboard();
+            //showLoginDashboard();
             break;
         case 1:
             // to add project
@@ -101,7 +86,7 @@ void showManagerOptions() {
         case 0:
             // here when user logout
             printf(logoutMessage);
-            showLoginDashboard();
+            //showLoginDashboard();
             break;
         case 1:
             // to allot employees to project
@@ -126,7 +111,7 @@ void showManagerOptions() {
             int index = inputTakeInt(1, getCountAllProjects());
             int projectId = ALL_PROJECT_ARRAY[index].id;
 
-            // displayAllEmployeesWorkingInProject(projectId);
+            displayEmployeesForProject(projectId);
 
             if (gotoMenu()) goto showOptionsAgain;
             break;
@@ -193,5 +178,5 @@ void showManagerOptions() {
 
 void startApp() {
     initializeApp();
+    showLoginDashboard();
 }
-
