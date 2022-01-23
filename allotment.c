@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include "databaseHelper2.h"
+#include "aDbHelper.h"
 
-void startProcess(struct Project chosenProject) {
+void backendWork(struct Project chosenProject) {
 
     int numOfEmpNeeded = chosenProject.numOfEmpNeeded;
     int numOfExperienced = chosenProject.minExpEmpNum;
@@ -215,10 +215,13 @@ void startProcess(struct Project chosenProject) {
 void allotEmployeeToProject() {
 
     int chosenId;
-    int total = displayProjects(2);
+    int total = getCountProjectByStatus(PROJECT_STATUS_IDLE);
 
     if (total == 0) printf("\n There are no idle projects left.");
-    else printf("\nPlease choose one project to allocate employees to it: ");
+    else {
+        displayProjectsByProgressStatus(PROJECT_STATUS_IDLE);
+        printf("\nPlease choose one project to allocate employees to it: ");
+    }
 
     again:
     scanf("%d", &chosenId);
@@ -231,5 +234,5 @@ void allotEmployeeToProject() {
         printf("\nThis project is already inProgress or completed.");
     }
 
-    startProcess(ALL_PROJECT_ARRAY[chosenId - 1]);
+    backendWork(ALL_PROJECT_ARRAY[chosenId - 1]);
 }

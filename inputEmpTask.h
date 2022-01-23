@@ -1,9 +1,0 @@
-//
-// Created by Lenovo on 21-01-2022.
-//
-
-#ifndef UNTITLED_INPUTEMPTASK_H
-#define UNTITLED_INPUTEMPTASK_H
-
-
-#endif //UNTITLED_INPUTEMPTASK_H

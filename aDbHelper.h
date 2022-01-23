@@ -1,5 +1,5 @@
-#ifndef UNTITLED_DATABASEHELPER2_H
-#define UNTITLED_DATABASEHELPER2_H
+#ifndef UNTITLED_ADBHELPER_H
+#define UNTITLED_ADBHELPER_H
 
 #include <stdbool.h>
 
@@ -58,15 +58,16 @@ extern const int PROJECT_STATUS_PROGRESS;
 extern const int PROJECT_BILLED;
 extern const int PROJECT_NOT_BILLED;
 
+extern const int EMP_STATUS_IDLE;
+extern const int EMP_STATUS_HAVE_PROJECT;
+extern const int EMP_STATUS_BUSY;
+
 extern const int EMP_DESIG_MANAGER;
 extern const int EMP_DESIG_ADMIN;
 extern const int EMP_DESIG_WORKER;
 
 extern const int EMP_MAX_PROJECTS;
 //extern const int ERROR;
-
-extern const int LOGIN_ROLE_ADMIN;
-extern const int LOGIN_ROLE_MANAGER;
 
 extern const int MEMBER_PRODUCT_OWNER;
 extern const int MEMBER_TECH_LEAD;
@@ -91,6 +92,8 @@ extern const char FORMAT_PRINT_EMPLOYEE[];
 extern const char FORMAT_PRINT_MEMBER[];
 extern const char FORMAT_PRINT_CLIENT[];
 extern const char FORMAT_PRINT_LOGIN[];
+
+extern const char INVALID_INPUT[];
 
 extern const char DOMAIN_ARRAY[][50];
 extern const int SIZE_DOMAIN;
@@ -190,13 +193,37 @@ void initializeApp();
 
 // -------> REPORTS WORK
 
-void displayEmployees(int STATUS);
+void displayEmployeesByWorkStatus(int STATUS);
 
-int displayProjects(int STATUS);
+int displayProjectsByProgressStatus(int STATUS);
+
+void displayAllProjects();
+
+void displayAllEmployees();
 
 void displayMembers();
 
 void displayEmployeesForProject(int projectId);
+
+void displayClientByProjectId(int projectId);
+
+int showAllManagersCustom();
+
+void displayEmployeesByDesignation(int designation);
+
+void displayAllClients();
+
+// ------------> COUNT FUNCTIONS
+
+int getCountProjectByStatus(int status);
+
+int getCountEmployeeByStatus(int empStatus);
+
+int getCountProjectsByBilling(int billed);
+
+int getCountAllProjects();
+
+int getCountAllEmployees();
 
 // -------> GET STRUCTURES BY ID'S
 
@@ -222,4 +249,4 @@ void performDatabaseTesting();
 
 void simpleTest();
 
-#endif //UNTITLED_DATABASEHELPER2_H
+#endif //UNTITLED_ADBHELPER_H

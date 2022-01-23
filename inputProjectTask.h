@@ -1,8 +1,0 @@
-#ifndef UNTITLED_INPUTPROJECTTASK_H
-#define UNTITLED_INPUTPROJECTTASK_H
-
-#include <stdbool.h>
-
-
-
-#endif //UNTITLED_INPUTPROJECTTASK_H
