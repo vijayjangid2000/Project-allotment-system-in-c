@@ -181,12 +181,13 @@ void addEmployeeToCompany() {
             break;
 
         case 3:
-            printf("\nEnter Designation");
+            printf("\nChoose Designation");
 
             // print all designations
             for (int i = 0; i < SIZE_DESIG; i++) {
                 printf("\n%d. %s", i + 1, DESIG_ARRAY_EMP[i]);
             }
+            printf("\n");
 
             scanf(" %d", &newEmp.designation);
             fflush(stdin);
@@ -215,20 +216,17 @@ void addEmployeeToCompany() {
             break;
 
         case 6: {
-
+            printf("\n\nChoose manager for employee\n");
             int numOfManagers = showAllManagersCustom();
-            printf("\n\nEnter Manager Id: ");
-            scanf(" %d", &newEmp.managerId);
+            scanf("%d", &newEmp.managerId);
 
             if (isValidManagerId(newEmp.managerId, numOfManagers)) nextCase++;
             else printf(INVALID_INPUT);
-
-            nextCase++;
             break;
         }
 
         case 7:
-            printf("\nEnter Date Of Birth(yyyyMMdd): ");
+            printf("\nEnter Date Of Birth(dd/mm/yyyy): ");
             fflush(stdin);
             gets(newEmp.dob);
 
@@ -246,17 +244,19 @@ void addEmployeeToCompany() {
 
             break;
 
-        case 9:
+        case 9: {
             printf("\nChoose Expertise in domain: ");
-            for (int i = 0; i < SIZE_DOMAIN; i++) {
-                printf("\n%d- %s", i + 1, DOMAIN_ARRAY[i]);
-            }
+            for (int i = 0; i < SIZE_DOMAIN; i++)
+                printf("\n%d. %s", i + 1, DOMAIN_ARRAY[i]);
+
+
             scanf("%d", &newEmp.domainExpert);
 
             if (isValidDomain(newEmp.domainExpert)) nextCase++;
             else printf(INVALID_INPUT);
-
             break;
+
+        }
 
         case 10:
             if (newEmp.designation == EMP_DESIG_MANAGER || newEmp.designation == EMP_DESIG_ADMIN) {
@@ -283,6 +283,8 @@ void addEmployeeToCompany() {
     else if (input == 'y') printSingleLineEmployee(newEmp);*/
 
     printSingleLineEmployee(newEmp);
+
+    return;
 
     // saving data into database
     ALL_EMP_ARRAY[ALL_EMP_ARRAY_SIZE++] = newEmp;

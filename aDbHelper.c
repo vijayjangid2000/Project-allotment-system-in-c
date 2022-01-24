@@ -48,7 +48,7 @@ const char FORMAT_PRINT_LOGIN[100] = "\n%s  %s  %d  %d";
 
 const char INVALID_INPUT[100] = "\nInvalid Input, Enter again: ";
 
-const char DOMAIN_ARRAY[5][100] = {"Finance", "Banking", "Data Science",
+const char DOMAIN_ARRAY[5][50] = {"Finance", "Banking", "Data Science",
                                    "HealthCare", "Education"};
 
 const int SIZE_DOMAIN = 5;
@@ -57,7 +57,6 @@ const int SIZE_COLUMNS_EMPLOYEE_WITH_ROLE = 12;
 const int SIZE_COLUMNS_MEMBER = 3;
 const int SIZE_COLUMNS_CLIENT = 6;
 const int SIZE_COLUMNS_LOGIN = 4;
-
 const int SIZE_COLUMNS_PROJECT = 13;
 
 const char DESIG_ARRAY_EMP[3][20] = {"Manager", "Admin", "Worker"};
@@ -65,7 +64,7 @@ const int SIZE_DESIG = 3;
 
 const char COLUMNS_PROJECT[13][50] = {"Id", "Name", "Status", "DeadLine", "Description",
                                       "CreatedOn", "Employees", "ManagerId", "Experience",
-                                      "NumExper", "Bill", "Domain", "Client"};
+                                      "NumExperience", "Bill", "Domain", "Client"};
 
 const char COLUMNS_EMPLOYEE[11][50] = {"Id", "Name", "JoiningDate", "Designation", "Email",
                                        "Mobile", "ManagerId", "numOfProjects", "Dob",
@@ -215,7 +214,6 @@ void printColumnsProject() {
     }
     printf("\n");
 }
-
 
 void printColumnsEmployee() {
     printf("\n\n");

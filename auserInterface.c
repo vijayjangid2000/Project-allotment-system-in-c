@@ -41,8 +41,8 @@ void showAdminOptions() {
     switch (choice) {
 
         case 0:
+            //logout and exit app
             printf(logoutMessage);
-            //showLoginDashboard();
             break;
         case 1:
             // to add project
@@ -54,6 +54,7 @@ void showAdminOptions() {
             break;
 
         default:
+            // if user enter wrong input
             printf(INVALID_INPUT);
             goto takeInputAgain;
     }
@@ -173,10 +174,12 @@ void showManagerOptions() {
             printf(INVALID_INPUT);
             goto showOptionsAgain;
     }
-
 }
 
 void startApp() {
+    addProjectToCompany();
+    return;
+
     initializeApp();
     showLoginDashboard();
 }

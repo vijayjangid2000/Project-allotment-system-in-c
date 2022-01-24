@@ -188,6 +188,12 @@ void addProjectToCompany() {
             fflush(stdin);
             printf("\nDeadline: ");
             scanf("%s", &project.deadLine);
+
+            if(true){
+                nextCase++;
+                break;
+            }
+
             if (isValidDeadLine(project.deadLine)) nextCase++;
             else printf(INVALID_INPUT);
             break;

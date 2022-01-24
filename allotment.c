@@ -114,6 +114,7 @@ void backendWork(struct Project chosenProject) {
     }
 
     if (!haveDomainPerson) {
+        printf("\nAllocation cancelled,");
         printf("\nWe don't have domain expert for this project, Please choose another project");
         return;
     }
@@ -209,6 +210,8 @@ void backendWork(struct Project chosenProject) {
         struct Employee emp1 = selectedEmployees[i];
         printSingleLineEmployee(emp1);
     }
+
+    // call main menu
 
 }
 

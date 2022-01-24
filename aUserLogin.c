@@ -25,7 +25,7 @@ int loginTask() {
     printf("\nWelcome to Appcino\n");
     struct Login loggedInUser;
 
-    char userName[100], password[100];
+    char userName[105], password[105];
 
     takeInputAgain:
     printf("\nEnter Username: ");
@@ -41,7 +41,7 @@ int loginTask() {
     again2:
     fflush(stdin);
     gets(password);
-    if (strlen(password) > 90 || strlen(password) < 1) {
+    if (strlen(password) > 100 || strlen(password) < 1) {
         printf("\nEnter valid password: ");
         goto again2;
     }
