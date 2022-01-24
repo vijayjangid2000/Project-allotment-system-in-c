@@ -1,5 +1,3 @@
-vijay|vijay123|2|5
-vijay1|vijay123|1|5
-vijay1|vijay121|2|6
-vijay2|vijay122|1|7
-vijay3|vijay123|1|11
+jangid8@gmail.com|vijay12345|1|6
+vijaya|12345|1|5
+vijaym|12345|1|6

@@ -228,7 +228,7 @@ void allotEmployeeToProject() {
 
     again:
     scanf("%d", &chosenId);
-    if (chosenId >= total) {
+    if (chosenId > total) {
         printf("\nPlease choose valid project: ");
         goto again;
     }

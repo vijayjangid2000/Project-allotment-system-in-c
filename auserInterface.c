@@ -26,6 +26,7 @@ bool gotoMenu() {
 }
 
 void showAdminOptions() {
+
     int choice;
 
     takeInputAgain:
@@ -177,9 +178,6 @@ void showManagerOptions() {
 }
 
 void startApp() {
-    addProjectToCompany();
-    return;
-
-    initializeApp();
+    initialLoading(); // Necessary
     showLoginDashboard();
 }

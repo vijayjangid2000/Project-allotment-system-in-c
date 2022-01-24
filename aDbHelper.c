@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include<conio.h>
+#include <ctype.h>
 
 const int PROJECT_STATUS_IDLE = 1;
 const int PROJECT_STATUS_COMPLETED = 2;
@@ -49,7 +50,7 @@ const char FORMAT_PRINT_LOGIN[100] = "\n%s  %s  %d  %d";
 const char INVALID_INPUT[100] = "\nInvalid Input, Enter again: ";
 
 const char DOMAIN_ARRAY[5][50] = {"Finance", "Banking", "Data Science",
-                                   "HealthCare", "Education"};
+                                  "HealthCare", "Education"};
 
 const int SIZE_DOMAIN = 5;
 const int SIZE_COLUMNS_EMPLOYEE = 11;
@@ -266,7 +267,6 @@ void updateProjectFile() {
                 tempP.minExpEmpNum, tempP.isBilled,
                 tempP.domainExpertId, tempP.clientId);
 
-        ALL_PROJECT_ARRAY[i] = tempP;
     }
 
     fclose(projectFile);
@@ -530,7 +530,7 @@ void getDataOfClientTable() {
     fclose(clientFile);
 }
 
-void initializeApp() {
+void initialLoading() {
     // This calls the important startUp functions
     getDataOfProjectTable();
     getDataOfEmployeeTable();
@@ -871,3 +871,96 @@ void printList(char a[30][100], int size) {
     }
 }
 
+// -------> Validation functions
+
+bool isValidStringWithLength(char str[100], int length) {
+
+    bool isCorrectLength = false;
+
+    if (length != 0) {
+        if (strlen(str) < length) return isCorrectLength;
+    } else isCorrectLength = true;
+
+    bool isAlpha = true;
+
+    unsigned char c;
+    while ((c = *str)) {
+        if (!isalpha(c)) {
+            isAlpha = false;
+            break;
+        }
+    }
+
+    return isAlpha && isCorrectLength;
+}
+
+bool isValidDate(int dd, int mm, int yy) {
+    //check year
+    if (yy >= 1900 && yy <= 9999) {
+        //check month
+        if (mm >= 1 && mm <= 12) {
+            //check days
+            if ((dd >= 1 && dd <= 31) && (mm == 1 || mm == 3 || mm == 5 || mm == 7 || mm == 8 || mm == 10 || mm == 12))
+                return true;
+            else if ((dd >= 1 && dd <= 30) && (mm == 4 || mm == 6 || mm == 9 || mm == 11))
+                return true;
+            else if ((dd >= 1 && dd <= 28) && (mm == 2))
+                return true;
+            else if (dd == 29 && mm == 2 && (yy % 400 == 0 || (yy % 4 == 0 && yy % 100 != 0)))
+                return true;
+            else
+                return false;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+bool isValidMobile(char mob[11]) {
+    return isValidStringWithLength(mob, 10);
+}
+
+bool isValidEmailId(char mailId[50]) {
+    int i, p1, p2;
+    p1 = p2 = 0;
+    for (i = 0; mailId[i] != '\0'; i++) {
+        if (mailId[i] == '@') p1 = i;
+        else if (mailId[i] == '.') p2 = i;
+    }
+    if (p1 > 3 && (p2 - p1) > 3) return true;
+    else return false;
+}
+
+void convertToYYYYmmDD(char *date) {
+    // given dd/mm/yyyy
+
+}
+
+bool isValidPassword(char password[]) {
+    int length = strlen(password);
+    return length > 3 && length < 20;
+}
+
+void takeInputString(char *string, int minLength, int maxLength) {
+    printf("\nEnter here: ");
+    scanf("%s", string);
+    if (strlen(string) >= minLength && strlen(string) < maxLength) {
+        return;
+    } else {
+        printf(INVALID_INPUT);
+        takeInputString(string, minLength, maxLength);
+    }
+}
+
+int takeYesOrNo() {
+    fflush(stdin);
+    char c = getchar();
+    if (c == 'y' || c == 'n') {
+        return 1;
+    } else {
+        printf(INVALID_INPUT);
+        return takeYesOrNo();
+    }
+}

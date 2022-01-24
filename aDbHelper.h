@@ -46,10 +46,10 @@ struct Login {
 struct Client {
     int clientId;
     char personName[100];
-    int projectId;
     char companyName[100];
     char contactMob[11];
     char contactEmail[100];
+    int projectId;
 };
 
 extern const int PROJECT_STATUS_IDLE;
@@ -189,7 +189,7 @@ void getDataOfLoginTable();
 
 void getDataOfClientTable();
 
-void initializeApp();
+void initialLoading();
 
 // -------> REPORTS WORK
 
@@ -254,5 +254,23 @@ void simpleTest();
 int inputTakeInt(int startRange, int endRange);
 
 void printList(char a[30][100], int size);
+
+// -------> Validation functions
+
+bool isValidStringWithLength(char str[100], int length);
+
+bool isValidDate(int dd, int mm, int yy);
+
+bool isValidMobile(char mob[11]);
+
+bool isValidEmailId(char mailId[50]);
+
+void convertToYYYYmmDD(char *date);
+
+bool isValidPassword(char password[]);
+
+void takeInputString(char *string, int minLength, int maxLength);
+
+int takeYesOrNo();
 
 #endif //UNTITLED_ADBHELPER_H

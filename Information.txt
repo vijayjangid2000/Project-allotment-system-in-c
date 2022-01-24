@@ -18,13 +18,31 @@ id mame joiningDate designation email mobile managerId
 engagedProjects dob prevExperience domainExpert
 
 
+login
+jangid8@gmail.com|vijay12345|1|6
+vijaya|12345|1|5
+vijaym|12345|1|6
 
+employee
 
+1|Worker1|20211101|3|ram@gmail.com|9856874856|6|3|20010909|5|2
+2|Worker2|20211101|3|aman@gmail.com|9856874856|6|4|20010909|4|2
+3|Worker3|20211101|3|shyam@gmail.com|9856874856|6|5|20010909|5|2
+4|Worker4|20211101|3|mukesh@gmail.com|9856874856|6|3|20010909|5|2
+5|Worker5|20211101|3|shyds@gmail.com|9856874856|6|3|20010909|5|2
+6|Worker6|20211101|2|mahesh@gmail.com|9856874856|5|2|20010909|5|2
+7|Worker7|20221012|1|jangid8@gmail.com|8000900010|9|0|20001210|1|2
+
+client
+1|VijayClient|ClientCompany|8952014440|jangid@gmail.com|1
+2|PrakharClient|company1|9000800021|vijay@gmail.com|2
 
 
 <----------------------->
 
-1 | Axis Bank Jaipur Project | 1 | 20221120 | Here is description | 20221100 | 6 | 5 | -1 | -1 | 0 | 123 | 2
+1|AIMS|1|20220210|Description|20200615|4|5|1|3|1|2|1
+
+
 2 | Sms | 1 | 20230111 | Here is des1 | 20220120 | 20 | -1 | 7 | 2 | 4 | 123 | 4
 3 | AIMS | 2 | 20220210 | Here is des1 | 20200615 | 15 | 5 | 3 | 6 | 1 | 12 | 1
 4 | HSBC | 3 | 20230114 | Here is des1 | 20211025 | 22 | 11 | -1 | -1 | 0  | 3 | 3
