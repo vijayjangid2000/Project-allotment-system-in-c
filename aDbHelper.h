@@ -133,6 +133,9 @@ extern int ALL_LOGIN_ARRAY_SIZE;
 extern struct Client ALL_CLIENT_ARRAY[];
 extern int ALL_CLIENT_ARRAY_SIZE;
 
+// LoggedInUser
+extern const struct Login currentUser;
+
 // SINGLE LINE PRINTING
 
 void printSingleLineProject(struct Project project);
@@ -168,26 +171,6 @@ void updateMemberFile();
 void updateLoginFile();
 
 void updateClientFile();
-
-void convertRowToProject(char row[], struct Project *project);
-
-void convertRowToEmployee(char row[], struct Employee *employee);
-
-void convertRowToMember(char row[], struct Member *member);
-
-void convertRowToLogin(char row[], struct Login *login);
-
-void convertRowToClient(char row[], struct Client *client);
-
-void getDataOfProjectTable();
-
-void getDataOfEmployeeTable();
-
-void getDataOfMemberTable();
-
-void getDataOfLoginTable();
-
-void getDataOfClientTable();
 
 void initialLoading();
 
@@ -257,17 +240,9 @@ void printList(char a[30][100], int size);
 
 // -------> Validation functions
 
-bool isValidStringWithLength(char str[100], int length);
-
 bool isValidDate(int dd, int mm, int yy);
 
-bool isValidMobile(char mob[11]);
-
 bool isValidEmailId(char mailId[50]);
-
-void convertToYYYYmmDD(char *date);
-
-bool isValidPassword(char password[]);
 
 void takeInputString(char *string, int minLength, int maxLength);
 

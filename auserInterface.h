@@ -4,6 +4,10 @@
 #include <stdbool.h>
 
 void startApp();
-bool gotoMenu();
+
+void showAdminOptions();
+void showManagerOptions();
+
+void backToMenu();
 
 #endif //UNTITLED_AUSERINTERFACE_H

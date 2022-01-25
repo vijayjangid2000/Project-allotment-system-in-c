@@ -151,6 +151,8 @@ int ALL_LOGIN_ARRAY_SIZE = 0;
 struct Client ALL_CLIENT_ARRAY[100];
 int ALL_CLIENT_ARRAY_SIZE = 0;
 
+const struct Login currentUser;
+
 // --------> INTERNAL USE FUNCTIONS
 
 void sortArray(int array[], int size) {
@@ -873,27 +875,6 @@ void printList(char a[30][100], int size) {
 
 // -------> Validation functions
 
-bool isValidStringWithLength(char str[100], int length) {
-
-    bool isCorrectLength = false;
-
-    if (length != 0) {
-        if (strlen(str) < length) return isCorrectLength;
-    } else isCorrectLength = true;
-
-    bool isAlpha = true;
-
-    unsigned char c;
-    while ((c = *str)) {
-        if (!isalpha(c)) {
-            isAlpha = false;
-            break;
-        }
-    }
-
-    return isAlpha && isCorrectLength;
-}
-
 bool isValidDate(int dd, int mm, int yy) {
     //check year
     if (yy >= 1900 && yy <= 9999) {
@@ -917,20 +898,9 @@ bool isValidDate(int dd, int mm, int yy) {
         return false;
     }
 }
-
-bool isValidMobile(char mob[11]) {
-    return isValidStringWithLength(mob, 10);
-}
-
 bool isValidEmailId(char mailId[50]) {
-    int i, p1, p2;
-    p1 = p2 = 0;
-    for (i = 0; mailId[i] != '\0'; i++) {
-        if (mailId[i] == '@') p1 = i;
-        else if (mailId[i] == '.') p2 = i;
-    }
-    if (p1 > 3 && (p2 - p1) > 3) return true;
-    else return false;
+
+    return true;
 }
 
 void convertToYYYYmmDD(char *date) {
@@ -938,15 +908,11 @@ void convertToYYYYmmDD(char *date) {
 
 }
 
-bool isValidPassword(char password[]) {
-    int length = strlen(password);
-    return length > 3 && length < 20;
-}
-
 void takeInputString(char *string, int minLength, int maxLength) {
+    fflush(stdin);
     printf("\nEnter here: ");
     scanf("%s", string);
-    if (strlen(string) >= minLength && strlen(string) < maxLength) {
+    if (strlen(string) >= minLength && strlen(string) <= maxLength) {
         return;
     } else {
         printf(INVALID_INPUT);

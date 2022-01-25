@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "aDbHelper.h"
+#include "auserInterface.h"
 
 void backendWork(struct Project chosenProject) {
 
@@ -194,24 +195,20 @@ void backendWork(struct Project chosenProject) {
     updateMemberFile();
 
     // Show Message on console
-    printf("\nSuccessful: We have allotted the required Employees to the project.");
+    printf("\n\nSuccessful: We have allotted the required Employees to the project.\n");
 
-    // print the projects selected
-
-    printf("\nAllocation Details: \n");
-
-    printColumnsProject();
-    printSingleLineProject(chosenProject);
-
-    printf("\nAllotted Employees Details\n");
+    printf("\nAllotted Employees Details.");
     // print selected employees
-    printColumnsEmployee();
     for (int i = 0; i < numOfEmpNeeded; ++i) {
         struct Employee emp1 = selectedEmployees[i];
         printSingleLineEmployee(emp1);
     }
 
     // call main menu
+    printf("\nGoto main menu? (y/n) ");
+
+    if(takeYesOrNo()) backToMenu();
+    else printf("\nExiting App");
 
 }
 

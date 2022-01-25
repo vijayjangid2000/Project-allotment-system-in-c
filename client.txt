@@ -1,2 +1,6 @@
-1|VijayClient|ClientCompany|8952014440|jangid@gmail.com|1
-2|PrakharClient|company1|9000800021|vijay@gmail.com|2
+1|Mukesh|Google|8952014440|mukesh@gmail.com|1
+2|Rajesh|Amazon|9000800021|rajesh@gmail.com|2
+3|Aman|Flipkart|8000900021|aman@gmail.com|3
+4|Vikas|Nike|8952014440|vikas@gmail.com|4
+5|Suresh|Tata|9000800021|suresh@gmail.com|5
+6|Ram|Jio|8000900021|ram@gmail.com|6

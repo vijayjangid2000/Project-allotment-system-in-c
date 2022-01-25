@@ -77,10 +77,11 @@ int loginTask() {
     }
 
     struct Employee emp = getEmployeeById(loggedInUser.empId);
-    printf("\nWelcome Back, %s!\n\n", emp.name);
+    printf("\nWelcome, %s!\n\n", emp.name);
 
-    if (loggedInUser.role == EMP_DESIG_ADMIN) return EMP_DESIG_ADMIN;
-    if (loggedInUser.role == EMP_DESIG_MANAGER) return EMP_DESIG_MANAGER;
+    loggedInUser = currentUser;
+
+    return loggedInUser.role;
 }
 
 
