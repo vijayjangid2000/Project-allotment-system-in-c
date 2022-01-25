@@ -18,7 +18,7 @@ void showLoginDashboard() {
 }
 
 bool gotoMenu() {
-    printf("\n1. Goto Menu? ");
+    printf("\nGoto Menu (Enter 1)? ");
     int choice = inputTakeInt(1, 1);
     if (choice == 1) {
         return true;
@@ -146,7 +146,7 @@ void showManagerOptions() {
         case 6:
             // report by employee status
             printf("\nChoose status");
-            printf("\n1. Idle\n2. Completed\n");
+            printf("\n1. Idle\n2. Busy\n");
             int status = inputTakeInt(1, 2);
             printf("\n");
             displayEmployeesByWorkStatus(status);

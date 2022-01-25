@@ -19,13 +19,8 @@ void addProjectToCompany() {
     GetSystemTime(&s);
 
     int year = s.wYear, month = s.wMonth, day = s.wDay;
-    if (s.wMonth < 10) {
-        sprintf(createdDate, "%d/0%d/%d", day, month, year);
-    } else {
-        sprintf(createdDate, "%d/%d/%d", day, month, year);
-    }
 
-    strcpy(project.createdOn, "20220124");
+    strcpy(project.createdOn, sprintf(createdDate, "%d|%d|%d", day, month, year));
 
     int nextCase = 1;
 
@@ -58,7 +53,7 @@ void addProjectToCompany() {
         case 4:
             fflush(stdin);
             printf("\nNumber of Employees Needed: ");
-            project.numOfEmpNeeded = inputTakeInt(3,100);
+            project.numOfEmpNeeded = inputTakeInt(3, 100);
             nextCase++;
             break;
 
@@ -68,7 +63,7 @@ void addProjectToCompany() {
 
             if (temp == 1) {
                 printf("\nEnter experience (in years): ");
-                project.minExperience = inputTakeInt(1,30);
+                project.minExperience = inputTakeInt(1, 30);
 
                 nextCase++;
             } else if (temp == 2) {
@@ -80,7 +75,7 @@ void addProjectToCompany() {
 
         case 6:
             printf("\nNumber of experienced Employees: ");
-            project.minExpEmpNum = inputTakeInt(1,project.numOfEmpNeeded);
+            project.minExpEmpNum = inputTakeInt(1, project.numOfEmpNeeded);
 
             nextCase++;
             break;
@@ -104,7 +99,7 @@ void addProjectToCompany() {
                     printf("\n%d. %s", i + 1, DOMAIN_ARRAY[i]);
                 }
                 printf("\nSelect one from list.");
-                project.domainExpertId = inputTakeInt(1,SIZE_DOMAIN);
+                project.domainExpertId = inputTakeInt(1, SIZE_DOMAIN);
 
                 nextCase++;
             }
@@ -130,20 +125,20 @@ void addProjectToCompany() {
     switch (nextCase) {
         case 1:
             printf("\nEnter Client's Name: ");
-            takeInputString(client.personName,5,30);
+            takeInputString(client.personName, 5, 30);
 
             nextCase++;
             break;
         case 2:
             printf("\nEnter Client's Company Name: ");
-            takeInputString(client.companyName,3,30);
+            takeInputString(client.companyName, 3, 30);
 
             nextCase++;
             break;
 
         case 3:
             printf("\nEnter Client's Mobile Number: ");
-            takeInputString(client.contactMob,10,10);
+            takeInputString(client.contactMob, 10, 10);
 
             nextCase++;
             break;
@@ -151,9 +146,9 @@ void addProjectToCompany() {
         case 4:
 
             printf("\nEnter Client's Email:");
-            takeInputString(client.contactEmail,3,30);
+            takeInputString(client.contactEmail, 3, 30);
 
-            if(!isValidEmailId(client.contactEmail)) break;
+            if (!isValidEmailId(client.contactEmail)) break;
             else nextCase++;
             break;
 
@@ -182,6 +177,6 @@ void addProjectToCompany() {
     // call main menu
     printf("\nGoto main menu? (y/n) ");
 
-    if(takeYesOrNo()) backToMenu();
+    if (takeYesOrNo()) backToMenu();
     else printf("\nExiting App");
 }
