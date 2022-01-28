@@ -1,23 +1,29 @@
 This is extra, no use. This file is for storing extra information
 
-
 ---------------------------------------------------------------------------------------
 
 First:
-When project status is changed then updating engagedProjects in employees.
-Document of validation in employee.
-Document of validation in project.
-Show all members for particular project.
-Show Client Information for particular project.
-Show numbering while showing data and store that data in array also.
-Create a function to show details of single structure.
-Function to make all employees idle and members text file becomes empty.
-Function to get next ID for each Table.
-Encryption for login.
+When project status is changed then updating engagedProjects in employees. [Asif]
+Document of validation in employee. [Rishabh]
+Document of validation in project. [Rishabh]
+Show all members for particular project. [Akshay]
+Show Client Information for particular project. [Akshay]
+Show numbering while showing data and store that data in array also. [Vijay]
+Create a function to show details of single structure. [5 function, Akshay]
+Function to make all employees idle and members text file becomes empty. [Akshay]
+Function to get next ID for each Table. [Vijay]
+Encryption for login. [Asif]
+Sample data for testing. [Rishabh]
+Business Rule [Tanishk]
 
 
 Documentation:
-All validation parameters for each column
+PPT
+Report
+Scrum Backlog
+Business Rules
+
+Algorithms/Flow
 
 
 ---------------------------------------------------------------------------------------
