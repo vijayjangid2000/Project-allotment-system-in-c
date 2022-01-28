@@ -874,7 +874,12 @@ void printList(char a[30][100], int size) {
 
 // -------> Validation functions
 
-bool isValidDate(int dd, int mm, int yy) {
+bool isValidDate(char date[]) {
+
+    int dd;
+    int mm;
+    int yy;
+
     //check year
     if (yy >= 1900 && yy <= 9999) {
         //check month
