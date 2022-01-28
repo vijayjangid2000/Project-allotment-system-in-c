@@ -6,6 +6,7 @@
 #include "aDbHelper.h"
 #include "auserInterface.h"
 
+
 void addProjectToCompany() {
 
     struct Project project;

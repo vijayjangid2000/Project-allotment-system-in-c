@@ -28,11 +28,11 @@ const int MEMBER_BA = 3;
 const int MEMBER_DEVELOPER = 4;
 const int MEMBER_TESTER = 5;
 
-const char ADDRESS_PROJECT[100] = "C:\\Users\\Lenovo\\CLionProjects\\untitled\\project.txt";
-const char ADDRESS_EMPLOYEE[100] = "C:\\Users\\Lenovo\\CLionProjects\\untitled\\employee.txt";
-const char ADDRESS_MEMBER[100] = "C:\\Users\\Lenovo\\CLionProjects\\untitled\\member.txt";
-const char ADDRESS_CLIENT[100] = "C:\\Users\\Lenovo\\CLionProjects\\untitled\\client.txt";
-const char ADDRESS_LOGIN[100] = "C:\\Users\\Lenovo\\CLionProjects\\untitled\\login.txt";
+const char ADDRESS_PROJECT[100] = "C:\\Users\\Lenovo\\CLionProjects\\Project_Allotment_System_In_C\\project.txt";
+const char ADDRESS_EMPLOYEE[100] = "C:\\Users\\Lenovo\\CLionProjects\\Project_Allotment_System_In_C\\employee.txt";
+const char ADDRESS_MEMBER[100] = "C:\\Users\\Lenovo\\CLionProjects\\Project_Allotment_System_In_C\\member.txt";
+const char ADDRESS_CLIENT[100] = "C:\\Users\\Lenovo\\CLionProjects\\Project_Allotment_System_In_C\\client.txt";
+const char ADDRESS_LOGIN[100] = "C:\\Users\\Lenovo\\CLionProjects\\Project_Allotment_System_In_C\\login.txt";
 
 const char FORMAT_PROJECT[100] = "%d|%s|%d|%s|%s|%s|%d|%d|%d|%d|%d|%d|%d";
 const char FORMAT_EMPLOYEE[100] = "%d|%s|%s|%d|%s|%s|%d|%d|%s|%d|%d";
