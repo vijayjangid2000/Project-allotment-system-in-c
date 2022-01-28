@@ -79,7 +79,7 @@ int loginTask() {
     struct Employee emp = getEmployeeById(loggedInUser.empId);
     printf("\nWelcome, %s!\n\n", emp.name);
 
-    loggedInUser = currentUser;
+    currentUser = loggedInUser;
 
     return loggedInUser.role;
 }

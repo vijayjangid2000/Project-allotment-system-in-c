@@ -151,7 +151,7 @@ int ALL_LOGIN_ARRAY_SIZE = 0;
 struct Client ALL_CLIENT_ARRAY[100];
 int ALL_CLIENT_ARRAY_SIZE = 0;
 
-const struct Login currentUser;
+struct Login currentUser;
 
 // --------> INTERNAL USE FUNCTIONS
 
@@ -733,7 +733,6 @@ int showAllManagersCustom() {
         if (ALL_EMP_ARRAY[i].designation == EMP_DESIG_MANAGER) {
             struct Employee e = ALL_EMP_ARRAY[i];
             printf("\n%d. %s %s", i + 1, e.name, e.designation);
-            printSingleLineEmployee(ALL_EMP_ARRAY[i]);
             totalManagers++;
         }
     }

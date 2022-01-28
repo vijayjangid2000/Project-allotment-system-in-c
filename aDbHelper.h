@@ -134,7 +134,7 @@ extern struct Client ALL_CLIENT_ARRAY[];
 extern int ALL_CLIENT_ARRAY_SIZE;
 
 // LoggedInUser
-extern const struct Login currentUser;
+extern struct Login currentUser;
 
 // SINGLE LINE PRINTING
 

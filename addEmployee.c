@@ -1,8 +1,5 @@
 #include<stdio.h>
-#include<conio.h>
-#include<windows.h>
 #include<string.h>
-#include<stdlib.h>
 #include "auserInterface.h"
 
 #include "aDbHelper.h"
@@ -64,7 +61,6 @@ void addEmployeeToCompany() {
         case 6: {
             printf("\nEnter Manager Id");
             newEmp.managerId = inputTakeInt(1, ALL_EMP_ARRAY[ALL_EMP_ARRAY_SIZE - 1].id);
-
             nextCase++;
             break;
         }

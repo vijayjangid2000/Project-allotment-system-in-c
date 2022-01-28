@@ -14,7 +14,7 @@ void showManagerOptions();
 void showLoginDashboard() {
     int who = loginTask();
     if (who == EMP_DESIG_ADMIN) showAdminOptions();
-    else showManagerOptions();
+    else if(who == EMP_DESIG_MANAGER) showManagerOptions();
 }
 
 bool gotoMenu() {
@@ -193,6 +193,7 @@ void showManagerOptions() {
 
 void startApp() {
     initialLoading(); // Necessary
+    performDatabaseTesting();
     showLoginDashboard();
 }
 
