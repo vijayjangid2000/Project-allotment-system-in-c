@@ -3,22 +3,20 @@
 #include "aDbHelper.h"
 
 void encrypt(char password[]) {
-    return;
-    int key = 0xFACA;
-    unsigned int i;
-    for (i = 0; i < strlen(password); ++i) {
-        password[i] = password[i] - key;
-    }
+
 }
 
 void decrypt(char password[]) {
-    return;
-    int key = 0xFACA;
-    unsigned int i;
-    for (i = 0; i < strlen(password); ++i) {
-        password[i] = password[i] + key;
-    }
+
 }
+
+/*int shortcut() {
+    strcpy(currentUser.userName, "ajay@gmail.com");
+    currentUser.role = EMP_DESIG_ADMIN;
+    strcpy(currentUser.password, "ajay123");
+    currentUser.empId = 4;
+    return currentUser.role;
+}*/
 
 int loginTask() {
 
@@ -83,6 +81,4 @@ int loginTask() {
 
     return loggedInUser.role;
 }
-
-
 

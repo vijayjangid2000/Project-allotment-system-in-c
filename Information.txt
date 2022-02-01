@@ -9,11 +9,15 @@ Document of validation in project. [Rishabh]
 Show all members for particular project. [Akshay]
 Show Client Information for particular project. [Akshay]
 Show numbering while showing data and store that data in array also. [Vijay]
-Create a function to show details of single structure. [5 function, Akshay]
-Function to make all employees idle and members text file becomes empty. [Akshay]
+
+Create a function to show details of single structure. [5 function, Vijay]
+
+Testing - Function to make all employees idle, projects idle
+and members text file becomes empty. [Akshay ad]
+
 Function to get next ID for each Table. [Vijay]
 Encryption for login. [Asif]
-Sample data for testing. [Rishabh]
+Sample data for testing. [Akshay]
 Business Rule [Tanishk]
 
 

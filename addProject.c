@@ -5,12 +5,12 @@
 #include<windows.h>
 #include "aDbHelper.h"
 #include "auserInterface.h"
-
+#include "addEmployee.h"
 
 void addProjectToCompany() {
 
     struct Project project;
-    project.id = ALL_PROJECT_ARRAY[ALL_PROJECT_ARRAY_SIZE - 2].id + 1;
+    project.id = getIdOfProjectTable();
     project.status = PROJECT_STATUS_IDLE;
     project.clientId = ALL_CLIENT_ARRAY_SIZE;
     project.managerId = 0;
@@ -18,10 +18,11 @@ void addProjectToCompany() {
     char createdDate[9];
     SYSTEMTIME s;
     GetSystemTime(&s);
-
     int year = s.wYear, month = s.wMonth, day = s.wDay;
+    sprintf(createdDate, "%d%02d%02d", year, month, day);
+    printf("%s",createdDate);
 
-    strcpy(project.createdOn, sprintf(createdDate, "%d|%d|%d", day, month, year));
+    strcpy(project.createdOn, createdDate);
 
     int nextCase = 1;
 
@@ -29,15 +30,13 @@ void addProjectToCompany() {
     switch (nextCase) {
 
         case 1:
-            fflush(stdin);
             printf("\nEnter Project Name: ");
-            takeInputString(project.name, 5, 30);
+            takeInputString(project.name, 1, 30);
 
             nextCase++;
             break;
 
         case 2:
-            fflush(stdin);
             printf("\nDescription: ");
             takeInputString(project.description, 5, 100);
 
@@ -48,13 +47,13 @@ void addProjectToCompany() {
             printf("\nDeadline (yyyyMMdd): ");
             takeInputString(project.deadLine, 8, 8);
 
-            nextCase++;
+            if (isValidDeadLine(project.deadLine))nextCase++;
             break;
 
         case 4:
             fflush(stdin);
             printf("\nNumber of Employees Needed: ");
-            project.numOfEmpNeeded = inputTakeInt(3, 100);
+            project.numOfEmpNeeded = takeInputInteger(3, 50);
             nextCase++;
             break;
 
@@ -64,10 +63,10 @@ void addProjectToCompany() {
 
             if (temp == 1) {
                 printf("\nEnter experience (in years): ");
-                project.minExperience = inputTakeInt(1, 30);
+                project.minExperience = takeInputInteger(1, 35);
 
                 nextCase++;
-            } else if (temp == 2) {
+            } else if (temp == 0) {
                 project.minExperience = 0;
                 nextCase++;
             }
@@ -76,7 +75,7 @@ void addProjectToCompany() {
 
         case 6:
             printf("\nNumber of experienced Employees: ");
-            project.minExpEmpNum = inputTakeInt(1, project.numOfEmpNeeded);
+            project.minExpEmpNum = takeInputInteger(1, project.numOfEmpNeeded);
 
             nextCase++;
             break;
@@ -100,7 +99,7 @@ void addProjectToCompany() {
                     printf("\n%d. %s", i + 1, DOMAIN_ARRAY[i]);
                 }
                 printf("\nSelect one from list.");
-                project.domainExpertId = inputTakeInt(1, SIZE_DOMAIN);
+                project.domainExpertId = takeInputInteger(1, SIZE_DOMAIN);
 
                 nextCase++;
             }
@@ -108,7 +107,6 @@ void addProjectToCompany() {
             break;
 
         default:
-            printf(INVALID_INPUT);
             break;
     }
     if (nextCase <= 9) goto back1;
@@ -126,13 +124,13 @@ void addProjectToCompany() {
     switch (nextCase) {
         case 1:
             printf("\nEnter Client's Name: ");
-            takeInputString(client.personName, 5, 30);
+            takeInputString(client.personName, 2, 30);
 
             nextCase++;
             break;
         case 2:
             printf("\nEnter Client's Company Name: ");
-            takeInputString(client.companyName, 3, 30);
+            takeInputString(client.companyName, 2, 40);
 
             nextCase++;
             break;
@@ -147,9 +145,9 @@ void addProjectToCompany() {
         case 4:
 
             printf("\nEnter Client's Email:");
-            takeInputString(client.contactEmail, 3, 30);
+            takeInputString(client.contactEmail, 5, 30);
 
-            if (!isValidEmailId(client.contactEmail)) break;
+            if (!isValidEmail(client.contactEmail)) break;
             else nextCase++;
             break;
 
@@ -160,8 +158,10 @@ void addProjectToCompany() {
 
     if (nextCase <= 4) goto back2;
 
-    // printSingleLineProject(project);
-    // printSingleLineClient(client);
+    if (isTesting) {
+        printSingleLineProject(project,1);
+        printSingleLineClient(client,1);
+    }
 
     ALL_CLIENT_ARRAY[ALL_CLIENT_ARRAY_SIZE] = client;
     ALL_CLIENT_ARRAY_SIZE++;

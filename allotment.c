@@ -3,7 +3,10 @@
 #include "aDbHelper.h"
 #include "auserInterface.h"
 
-void backendWork(struct Project chosenProject) {
+void startAllocation(int projectId) {
+
+    // project Id
+    struct Project chosenProject = getProjectById(projectId);
 
     int numOfEmpNeeded = chosenProject.numOfEmpNeeded;
     int numOfExperienced = chosenProject.minExpEmpNum;
@@ -13,34 +16,61 @@ void backendWork(struct Project chosenProject) {
     int domainId = chosenProject.domainExpertId,
             experienceYear = chosenProject.minExperience;
 
-    int ba = numOfEmpNeeded * 0.3,
-            dev = numOfEmpNeeded - (2 * ba),
-            tester = ba;
+    int ba = (int) (numOfEmpNeeded * 0.3), tester = ba,
+            dev = numOfEmpNeeded - (2 * ba);
 
     if (isTesting) printf("\nAllotment Work: ", ba, dev, tester);
 
     struct Employee selectedEmployees[numOfEmpNeeded];
     int indexEmp = 0;
 
-    bool haveExperienced = false, haveDomainPerson = false, haveRequiredEmployees = false;
-    bool haveTechLead = false, haveProductOwner = false;
+    bool haveExperienced = false,
+            haveDomainPerson = false,
+            haveRequiredEmployees = false,
+            haveTechLead = false,
+            haveProductOwner = false;
 
-    // Checking for free employees
-    int tempNumOfEmpFree = 0;
+    // Checking for availability
+    int tempNumOfEmpFree = 0, tempExperienced = 0;
+
     for (int i = 0; i < ALL_EMP_ARRAY_SIZE; ++i) {
+        struct Employee empTemp = ALL_EMP_ARRAY[i];
 
-        if (ALL_EMP_ARRAY[i].designation == EMP_DESIG_WORKER &&
-            ALL_EMP_ARRAY[i].engagedProjects < EMP_MAX_PROJECTS) {
-            tempNumOfEmpFree++;
+        if (empTemp.engagedProjects < EMP_MAX_PROJECTS) {
+
+            if (empTemp.designation == EMP_DESIG_WORKER) {
+                tempNumOfEmpFree++;
+            }
+
+            if (!haveDomainPerson && empTemp.domainExpert == domainId) {
+                haveDomainPerson = true;
+            }
+
+            if (!haveExperienced && empTemp.prevExperience >= experienceYear) {
+                tempExperienced++;
+                if (tempExperienced == numOfExperienced) haveExperienced = true;
+            }
         }
     }
+
     if (tempNumOfEmpFree >= numOfEmpNeeded) haveRequiredEmployees = true;
 
     if (!haveRequiredEmployees) {
-        printf("\nAllocation cancelled,");
+        printf("\nAllocation cancelled.");
         printf("\nWe don't have required number of employees for this project");
         return;
+    } else if (!haveExperienced) {
+        printf("\nAllocation cancelled.");
+        printf("\nWe don't have experienced employees for this project");
+        return;
+    } else if (!haveDomainPerson) {
+        printf("\nAllocation cancelled.");
+        printf("\nWe don't have domain expert for this project");
+        return;
     }
+
+    haveDomainPerson = false;
+    haveExperienced = false;
 
     // Allotting domainExpert and experienced Employees first
     for (int i = 0; i < ALL_EMP_ARRAY_SIZE; ++i) {
@@ -50,10 +80,10 @@ void backendWork(struct Project chosenProject) {
             ALL_EMP_ARRAY[i].engagedProjects < EMP_MAX_PROJECTS) {
 
             if (!haveDomainPerson && ALL_EMP_ARRAY[i].domainExpert == domainId) {
+                ALL_EMP_ARRAY[i].engagedProjects++;
                 selectedEmployees[indexEmp] = ALL_EMP_ARRAY[i];
                 numOfDomainNeeded--;
                 numOfEmpNeeded--;
-                ALL_EMP_ARRAY[i].engagedProjects++;
                 haveDomainPerson = true;
                 numOfSelectedEmployees++;
 
@@ -66,22 +96,22 @@ void backendWork(struct Project chosenProject) {
                 } else if (ba > 0) {
                     selectedEmployees[indexEmp].roleInProject = MEMBER_BA;
                     ba--;
-                } else if (dev > 0) {
-                    selectedEmployees[indexEmp].roleInProject = MEMBER_DEVELOPER;
-                    dev--;
                 } else if (tester > 0) {
                     selectedEmployees[indexEmp].roleInProject = MEMBER_TESTER;
                     tester--;
+                } else if (dev > 0) {
+                    selectedEmployees[indexEmp].roleInProject = MEMBER_DEVELOPER;
+                    dev--;
                 }
 
                 indexEmp++;
 
                 // EXPERIENCED HERE
             } else if (numOfExperienced > 0 && experienceYear <= ALL_EMP_ARRAY[i].prevExperience) {
+                ALL_EMP_ARRAY[i].engagedProjects++;
                 selectedEmployees[indexEmp] = ALL_EMP_ARRAY[i];
                 numOfExperienced--;
                 numOfEmpNeeded--;
-                ALL_EMP_ARRAY[i].engagedProjects++;
                 numOfSelectedEmployees++;
                 if (numOfExperienced == 0) haveExperienced = true;
 
@@ -94,30 +124,18 @@ void backendWork(struct Project chosenProject) {
                 } else if (ba > 0) {
                     selectedEmployees[indexEmp].roleInProject = MEMBER_BA;
                     ba--;
-                } else if (dev > 0) {
-                    selectedEmployees[indexEmp].roleInProject = MEMBER_DEVELOPER;
-                    dev--;
                 } else if (tester > 0) {
                     selectedEmployees[indexEmp].roleInProject = MEMBER_TESTER;
                     tester--;
+                } else if (dev > 0) {
+                    selectedEmployees[indexEmp].roleInProject = MEMBER_DEVELOPER;
+                    dev--;
                 }
                 indexEmp++;
             }
 
             if (haveExperienced && numOfExperienced == 0) break;
         }
-    }
-
-    if (!haveExperienced) {
-        printf("\nAllocation cancelled,");
-        printf("\nWe don't have experienced people for this project");
-        return;
-    }
-
-    if (!haveDomainPerson) {
-        printf("\nAllocation cancelled,");
-        printf("\nWe don't have domain expert for this project, Please choose another project");
-        return;
     }
 
     int round = 0;
@@ -130,7 +148,6 @@ void backendWork(struct Project chosenProject) {
             numOfEmpNeeded > 0 && round == ALL_EMP_ARRAY[i].engagedProjects) {
 
             bool alreadyChosen = false;
-
             for (int j = 0; j < numOfSelectedEmployees; ++j) {
                 if (selectedEmployees[j].id == ALL_EMP_ARRAY[i].id) {
                     alreadyChosen = true;
@@ -140,9 +157,9 @@ void backendWork(struct Project chosenProject) {
 
             if (alreadyChosen) continue; // already selected then continue
 
+            ALL_EMP_ARRAY[i].engagedProjects++;
             selectedEmployees[indexEmp] = ALL_EMP_ARRAY[i];
             numOfEmpNeeded--;
-            ALL_EMP_ARRAY[i].engagedProjects++;
             numOfSelectedEmployees++;
 
             if (!haveProductOwner) {
@@ -154,12 +171,12 @@ void backendWork(struct Project chosenProject) {
             } else if (ba > 0) {
                 selectedEmployees[indexEmp].roleInProject = MEMBER_BA;
                 ba--;
-            } else if (dev > 0) {
-                selectedEmployees[indexEmp].roleInProject = MEMBER_DEVELOPER;
-                dev--;
             } else if (tester > 0) {
                 selectedEmployees[indexEmp].roleInProject = MEMBER_TESTER;
                 tester--;
+            } else if (dev > 0) {
+                selectedEmployees[indexEmp].roleInProject = MEMBER_DEVELOPER;
+                dev--;
             }
 
             indexEmp++;
@@ -194,45 +211,50 @@ void backendWork(struct Project chosenProject) {
     updateProjectFile();
     updateMemberFile();
 
+    // set manager Id of project to the manager who is allocating
+    ALL_PROJECT_ARRAY[projectId].managerId = currentUser.empId;
+
     // Show Message on console
     printf("\n\nSuccessful: We have allotted the required Employees to the project.\n");
 
-    printf("\nAllotted Employees Details.");
+    printf("\nAllotted Employees to project: %s", chosenProject.name);
     // print selected employees
+    printColumnsEmployee();
+    int numbering = 1;
     for (int i = 0; i < numOfEmpNeeded; ++i) {
         struct Employee emp1 = selectedEmployees[i];
-        printSingleLineEmployee(emp1);
+        printSingleLineEmployee(emp1, numbering++);
     }
 
     // call main menu
     printf("\nGoto main menu? (y/n) ");
 
-    if(takeYesOrNo()) backToMenu();
+    if (takeYesOrNo()) backToMenu();
     else printf("\nExiting App");
 
 }
 
 void allotEmployeeToProject() {
 
-    int chosenId;
     int total = getCountProjectByStatus(PROJECT_STATUS_IDLE);
+    struct Project tempArray[ALL_PROJECT_ARRAY_SIZE];
 
-    if (total == 0) printf("\n There are no idle projects left.");
-    else {
-        displayProjectsByProgressStatus(PROJECT_STATUS_IDLE);
+    if (total == 0) {
+        printf("\n There are no idle projects left.");
+
+        // call main menu
+        printf("\nGoto main menu? (y/n) ");
+        if (takeYesOrNo()) backToMenu();
+        else printf("\nExiting App");
+
+        return;
+
+    } else {
+        displayProjectsByProgressStatus(PROJECT_STATUS_IDLE, tempArray);
         printf("\nPlease choose one project to allocate employees to it: ");
     }
 
-    again:
-    scanf("%d", &chosenId);
-    if (chosenId > total) {
-        printf("\nPlease choose valid project: ");
-        goto again;
-    }
+    int row = takeInputInteger(1, total);
 
-    if (ALL_PROJECT_ARRAY[chosenId - 1].status != PROJECT_STATUS_IDLE) {
-        printf("\nThis project is already inProgress or completed.");
-    }
-
-    backendWork(ALL_PROJECT_ARRAY[chosenId - 1]);
+    startAllocation(tempArray[row - 1].id);
 }

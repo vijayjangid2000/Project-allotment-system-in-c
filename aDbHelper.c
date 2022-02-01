@@ -4,12 +4,11 @@
 #include <stdbool.h>
 #include<conio.h>
 #include <ctype.h>
+#include <windows.h>
 
 const int PROJECT_STATUS_IDLE = 1;
 const int PROJECT_STATUS_COMPLETED = 2;
 const int PROJECT_STATUS_PROGRESS = 3;
-const int PROJECT_BILLED = 1;
-const int PROJECT_NOT_BILLED = 0;
 
 const int EMP_DESIG_MANAGER = 1;
 const int EMP_DESIG_ADMIN = 2;
@@ -20,7 +19,6 @@ const int EMP_STATUS_HAVE_PROJECT = 2;
 const int EMP_STATUS_BUSY = 3;
 
 const int EMP_MAX_PROJECTS = 5;
-const int ERROR = -1;
 
 const int MEMBER_PRODUCT_OWNER = 1;
 const int MEMBER_TECH_LEAD = 2;
@@ -40,12 +38,12 @@ const char FORMAT_MEMBER[100] = "%d|%d|%d";
 const char FORMAT_CLIENT[100] = "%d|%s|%s|%s|%s|%d";
 const char FORMAT_LOGIN[100] = "%s|%s|%d|%d";
 
-const char FORMAT_PRINT_PROJECT[100] = "\n%d  %s  %d  %s  %s  %s  %d  %d  %d  %d  %d  %d  %d";
-const char FORMAT_PRINT_EMPLOYEE[100] = "\n%d  %s  %s  %d  %s  %s  %d  %d  %s  %d  %d";
-const char FORMAT_PRINT_EMPLOYEE_WITH_ROLE[100] = "\n%d  %s  %s  %d  %s  %s  %d  %d  %s  %d  %d";
-const char FORMAT_PRINT_MEMBER[100] = "\n%d  %d  %d";
-const char FORMAT_PRINT_CLIENT[100] = "\n%d  %s  %s  %s  %s  %d"; // IF LAST IS %s THEN NO NEED OF \n
-const char FORMAT_PRINT_LOGIN[100] = "\n%s  %s  %d  %d";
+const char FORMAT_PRINT_PROJECT[100] = "\n%d. %d  %s  %d  %s  %s  %s  %d  %d  %d  %d  %d  %d  %d";
+const char FORMAT_PRINT_EMPLOYEE[100] = "\n%d. %d  %s  %s  %d  %s  %s  %d  %d  %s  %d  %d";
+const char FORMAT_PRINT_EMPLOYEE_WITH_ROLE[100] = "\n%d. %d  %s  %s  %d  %s  %s  %d  %d  %s  %d  %d";
+const char FORMAT_PRINT_MEMBER[100] = "\n%d. %d  %d  %d";
+const char FORMAT_PRINT_CLIENT[100] = "\n%d. %d  %s  %s  %s  %s  %d"; // IF LAST IS %s THEN NO NEED OF \n
+const char FORMAT_PRINT_LOGIN[100] = "\n%d. %s  %s  %d  %d";
 
 const char INVALID_INPUT[100] = "\nInvalid Input, Enter again: ";
 
@@ -153,8 +151,6 @@ int ALL_CLIENT_ARRAY_SIZE = 0;
 
 struct Login currentUser;
 
-// --------> INTERNAL USE FUNCTIONS
-
 void sortArray(int array[], int size) {
     int i, j, temp;
     for (i = 0; i < size; i++) {
@@ -168,18 +164,18 @@ void sortArray(int array[], int size) {
     }
 }
 
-// SINGLE LINE PRINTING
+// printing row functions
 
-void printSingleLineProject(struct Project project) {
-    printf(FORMAT_PRINT_PROJECT,
+void printSingleLineProject(struct Project project, int number) {
+    printf(FORMAT_PRINT_PROJECT, number,
            project.id, project.name, project.status, project.deadLine, project.description,
            project.createdOn, project.numOfEmpNeeded, project.managerId,
            project.minExperience, project.minExpEmpNum, project.isBilled,
            project.domainExpertId, project.clientId);
 }
 
-void printSingleLineEmployee(struct Employee employee) {
-    printf(FORMAT_PRINT_EMPLOYEE,
+void printSingleLineEmployee(struct Employee employee, int number) {
+    printf(FORMAT_PRINT_EMPLOYEE, number,
            employee.id, employee.name, employee.joiningDate,
            employee.designation,
            employee.email,
@@ -187,28 +183,28 @@ void printSingleLineEmployee(struct Employee employee) {
            employee.dob, employee.prevExperience, employee.domainExpert);
 }
 
-void printSingleLineMember(struct Member member) {
+void printSingleLineMember(struct Member member, int number) {
 
-    printf(FORMAT_PRINT_MEMBER,
+    printf(FORMAT_PRINT_MEMBER, number,
            member.projectId, member.empId, member.empRole);
 }
 
-void printSingleLineLogin(struct Login login) {
+void printSingleLineLogin(struct Login login, int number) {
 
-    printf(FORMAT_PRINT_LOGIN,
+    printf(FORMAT_PRINT_LOGIN, number,
            login.userName, login.password, login.role, login.empId);
 
 }
 
-void printSingleLineClient(struct Client client) {
+void printSingleLineClient(struct Client client, int number) {
 
-    printf(FORMAT_PRINT_CLIENT,
+    printf(FORMAT_PRINT_CLIENT, number,
            client.clientId, client.personName, client.companyName,
            client.contactMob, client.contactEmail, client.projectId);
 
 }
 
-// -------> COLUMNS PRINTING
+// columns printing
 
 void printColumnsProject() {
     printf("\n\n");
@@ -250,7 +246,7 @@ void printColumnsMember() {
     printf("\n");
 }
 
-// INITIALIZATION
+// getting data from table to application
 
 void updateProjectFile() {
 
@@ -541,7 +537,7 @@ void initialLoading() {
     getDataOfLoginTable();
 }
 
-// ------------> COUNT FUNCTIONS
+// get count of rows in each file
 
 int getCountProjectByStatus(int status) {
 
@@ -603,42 +599,65 @@ int getCountAllEmployees() {
     return ALL_EMP_ARRAY_SIZE;
 }
 
-// -------> REPORTS WORK
+// get next primary key for table
 
-void displayEmployeesByWorkStatus(int STATUS) {
+int getIdOfProjectTable() {
+    return ALL_PROJECT_ARRAY[ALL_PROJECT_ARRAY_SIZE - 1].id + 1;
+}
+
+int getIdOfEmployeeTable() {
+    return ALL_EMP_ARRAY[ALL_EMP_ARRAY_SIZE - 1].id + 1;
+}
+
+int getIdOfClientTable() {
+    return ALL_CLIENT_ARRAY[ALL_CLIENT_ARRAY_SIZE - 1].clientId + 1;
+}
+
+// displaying data for reports and selection
+
+void displayEmployeesByWorkStatus(int STATUS, struct Employee array[]) {
 
     printColumnsEmployee();
-
     printf("\n");
 
-    if (STATUS == EMP_MAX_PROJECTS || STATUS == 0) {
-        for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
-            if (ALL_EMP_ARRAY[i].engagedProjects == STATUS)
-                printSingleLineEmployee(ALL_EMP_ARRAY[i]);
+    int index = 0;
+
+    int numbering = 1;
+    for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
+        if (ALL_EMP_ARRAY[i].engagedProjects == STATUS) {
+            printSingleLineEmployee(ALL_EMP_ARRAY[i], numbering++);
+            if (array != NULL) array[index++] = ALL_EMP_ARRAY[i];
         }
     }
 }
 
-void displayProjectsByProgressStatus(int STATUS) {
+void displayProjectsByProgressStatus(int STATUS, struct Project array[]) {
 
     printColumnsProject();
+    int index = 0;
 
+    int numbering = 1;
     for (int i = 0; i < ALL_PROJECT_ARRAY_SIZE; ++i) {
         struct Project temp = ALL_PROJECT_ARRAY[i];
         if (temp.status == STATUS) {
-            printSingleLineProject(temp);
+            printSingleLineProject(temp, numbering++);
+            if (array != NULL) array[index++] = temp;
         }
     }
 }
 
-void displayAllProjects() {
+void displayAllProjects(struct Project array[]) {
+
+    int index = 0;
 
     printColumnsProject();
-
+    int numbering = 1;
     for (int i = 0; i < ALL_PROJECT_ARRAY_SIZE; ++i) {
         struct Project temp = ALL_PROJECT_ARRAY[i];
-        printSingleLineProject(temp);
+        printSingleLineProject(temp, numbering++);
+        if (array != NULL) array[index++] = temp;
     }
+
 }
 
 void displayAllEmployees() {
@@ -646,9 +665,9 @@ void displayAllEmployees() {
     printColumnsEmployee();
 
     printf("\n");
-
+    int numbering = 1;
     for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
-        printSingleLineEmployee(ALL_EMP_ARRAY[i]);
+        printSingleLineEmployee(ALL_EMP_ARRAY[i], numbering++);
     }
 
 }
@@ -659,7 +678,11 @@ void displayEmployeesForProject(int projectId) {
 
     int sizeEmpArray = 0;
     int empWorkingInProject = getCountWorkingEmployeesInProject(projectId);
-    for (int i = 0; i < SIZE_COLUMNS_MEMBER; ++i) {
+
+    printf("\nNumber of Employees working in this project: %d\n", empWorkingInProject);
+
+    // get all emp id in a array from member table
+    for (int i = 0; i < ALL_MEMBER_ARRAY_SIZE; ++i) {
         struct Member member = ALL_MEMBER_ARRAY[i];
         if (member.projectId == projectId) {
             empIdArray[sizeEmpArray++] = member.empId;
@@ -674,73 +697,110 @@ void displayEmployeesForProject(int projectId) {
         printf("%s ", COLUMNS_EMPLOYEE_WITH_ROLE[i]);
 
     printf("\n");
+
+    int numbering = 1;
     for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
 
         struct Employee emp = ALL_EMP_ARRAY[i];
         for (int j = 0; j < sizeEmpArray; ++j) {
-            if (empIdArray[i] == emp.id) {
-                printSingleLineEmployee(emp);
+            if (empIdArray[j] == emp.id) {
+                printSingleLineEmployee(emp, numbering++);
                 break;
             }
         }
     }
+
+    printf("\n");
 }
 
 void displayClientByProjectId(int projectId) {
 
     printColumnsClient();
 
+    int numbering = 1;
     for (int i = 0; i < ALL_CLIENT_ARRAY_SIZE; ++i) {
         struct Client client = ALL_CLIENT_ARRAY[i];
         if (client.projectId == projectId) {
-            printSingleLineClient(client);
+            printSingleLineClient(client, numbering++);
         }
     }
 }
 
-void displayEmployeesByDesignation(int designation) {
+void displayEmployeesByDesignation(int designation, struct Employee array[]) {
     printColumnsEmployee();
 
     printf("\n");
+    int numbering = 1, index = 0;
     for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
-        if (ALL_EMP_ARRAY[i].designation == designation)
-            printSingleLineEmployee(ALL_EMP_ARRAY[i]);
+        if (ALL_EMP_ARRAY[i].designation == designation) {
+            printSingleLineEmployee(ALL_EMP_ARRAY[i], numbering++);
+            if (array != NULL) array[index++] = ALL_EMP_ARRAY[i];
+        }
     }
 }
 
 void displayAllClients() {
     printColumnsClient();
 
+    int numbering = 1;
     for (int i = 0; i < ALL_CLIENT_ARRAY_SIZE; ++i) {
         struct Client client = ALL_CLIENT_ARRAY[i];
-        printSingleLineClient(client);
+        printSingleLineClient(client, numbering++);
     }
 }
 
-int showAllManagersCustom() {
+void changeProjectStatusToIdle(int projectId) {
 
-    // It shows all managers
-    // return the count of managers
-
-    for (int i = 0; i < SIZE_COLUMNS_EMPLOYEE; ++i)
-        printf(" %s", COLUMNS_EMPLOYEE[i]);
-
-    int totalManagers = 0;
-    printf("\n");
-    for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
-
-        printf("");
-        if (ALL_EMP_ARRAY[i].designation == EMP_DESIG_MANAGER) {
-            struct Employee e = ALL_EMP_ARRAY[i];
-            printf("\n%d. %s %s", i + 1, e.name, e.designation);
-            totalManagers++;
+    // get employees requried and change status of project
+    int empRequired = 0;
+    for (int i = 0; i < ALL_PROJECT_ARRAY_SIZE; ++i) {
+        if (ALL_PROJECT_ARRAY[i].id == projectId) {
+            ALL_PROJECT_ARRAY[i].status = PROJECT_STATUS_COMPLETED;
+            empRequired = ALL_PROJECT_ARRAY[i].numOfEmpNeeded;
+            updateProjectFile();
+            break;
         }
     }
 
-    return totalManagers;
+
+    // remove the members and save the employees working in that project
+    int empIdArray[empRequired];
+    struct Member memberArray[100];
+    int size = 0, indexMember = 0, indexEmp = 0;
+    for (int i = 0; i < ALL_MEMBER_ARRAY_SIZE; ++i) {
+        struct Member mem = ALL_MEMBER_ARRAY[i];
+        if (mem.projectId != projectId) {
+            memberArray[indexMember++] = ALL_MEMBER_ARRAY[i];
+            size++;
+        } else {
+            empIdArray[indexEmp++] = mem.empId;
+        }
+    }
+
+    // save the new data of member in the Global array
+    for (int i = 0; i < size; ++i) {
+        ALL_MEMBER_ARRAY[i] = memberArray[i];
+    }
+    ALL_MEMBER_ARRAY_SIZE = size;
+
+    updateMemberFile();
+
+    // removing alloted project to employees
+    for (int i = 0; i < empRequired; ++i) {
+        for (int j = 0; j < ALL_EMP_ARRAY_SIZE; ++j) {
+            if (ALL_EMP_ARRAY[j].id == empIdArray[i]) {
+                ALL_EMP_ARRAY[j].engagedProjects--;
+                break;
+            }
+        }
+    }
+
+    updateEmployeeFile();
+
+    printf("%s", "\nSuccess, Project status updated!\n");
 }
 
-// -------> GET STRUCTURES BY ID'S
+// Get structures or row in table by passing Id
 
 struct Employee getEmployeeById(int empId) {
     for (int i = 0; i < ALL_EMP_ARRAY_SIZE; i++) {
@@ -755,16 +815,17 @@ struct Project getProjectById(int projectId) {
     }
 }
 
-// INTERNAL - NO DIRECT CALL ---> Print ALL Data for testing
+// Testing Functions
 
 void testPrintClients() {
 
     printf("\n\nDATA OF FILE CLIENT:");
     printColumnsClient();
 
+    int numbering = 1;
     for (int i = 0; i < ALL_CLIENT_ARRAY_SIZE; ++i) {
         struct Client client = ALL_CLIENT_ARRAY[i];
-        printSingleLineClient(client);
+        printSingleLineClient(client, numbering++);
     }
 }
 
@@ -772,9 +833,10 @@ void testPrintEmployees() {
 
     printf("\n\nDATA OF FILE EMPLOYEE:");
     printColumnsEmployee();
+    int numbering = 1;
     for (int i = 0; i < ALL_EMP_ARRAY_SIZE; ++i) {
         struct Employee emp1 = ALL_EMP_ARRAY[i];
-        printSingleLineEmployee(emp1);
+        printSingleLineEmployee(emp1, numbering++);
     }
 }
 
@@ -782,9 +844,10 @@ void testPrintMembers() {
 
     printf("\n\nDATA OF FILE MEMBER:");
     printColumnsMember();
+    int numbering = 1;
     for (int i = 0; i < ALL_MEMBER_ARRAY_SIZE; ++i) {
         struct Member member = ALL_MEMBER_ARRAY[i];
-        printSingleLineMember(member);
+        printSingleLineMember(member, numbering++);
     }
 }
 
@@ -792,9 +855,10 @@ void testPrintProjects() {
 
     printf("\n\nDATA OF FILE PROJECT:");
     printColumnsProject();
+    int numbering = 1;
     for (int i = 0; i < ALL_PROJECT_ARRAY_SIZE; ++i) {
         struct Project p1 = ALL_PROJECT_ARRAY[i];
-        printSingleLineProject(p1);
+        printSingleLineProject(p1, numbering++);
     }
 }
 
@@ -802,9 +866,10 @@ void testPrintLogins() {
 
     printf("\n\nDATA OF FILE LOGIN:");
     printColumnsLogin();
+    int numbering = 1;
     for (int i = 0; i < ALL_LOGIN_ARRAY_SIZE; ++i) {
         struct Login login = ALL_LOGIN_ARRAY[i];
-        printSingleLineLogin(login);
+        printSingleLineLogin(login, numbering++);
     }
 }
 
@@ -827,9 +892,25 @@ void testUpdatingMethods() {
     updateLoginFile();
 }
 
-// --------> Testing Methods
+void resetDatabase() {
 
-void performDatabaseTesting() {
+    for (int i = 0; i < ALL_EMP_ARRAY_SIZE; ++i) {
+        ALL_EMP_ARRAY[i].engagedProjects = 0;
+    }
+    updateEmployeeFile();
+
+    for (int i = 0; i < ALL_PROJECT_ARRAY_SIZE; ++i) {
+        ALL_PROJECT_ARRAY[i].status = PROJECT_STATUS_IDLE;
+    }
+    updateProjectFile();
+
+    ALL_MEMBER_ARRAY_SIZE = 0;
+    updateMemberFile();
+}
+
+// Testing Methods
+
+void startTestingForFiles() {
 
     testUpdatingMethods();
 
@@ -843,15 +924,13 @@ void performDatabaseTesting() {
 
     updateProjectFile();
 
+    printf("\n\nTesting Completed\n\n");
+
 }
 
-void simpleTest() {
-    printf("Checking Simple calling");
-}
+// Easy Input Functions
 
-// --------> INPUT EASE
-
-int inputTakeInt(int startRange, int endRange) {
+int takeInputInteger(int startRange, int endRange) {
     int input;
     printf("\nEnter your choice: ");
     scanf("%d", &input);
@@ -861,55 +940,8 @@ int inputTakeInt(int startRange, int endRange) {
         if (startRange == endRange) printf("\nInvalid (Enter %d)", startRange);
         else if (endRange - startRange == 1) printf("\nInvalid (Enter %d or %d)", startRange, endRange);
         else printf("\nInvalid (Enter between %d and %d)", startRange, endRange);
-        return inputTakeInt(startRange, endRange);
+        return takeInputInteger(startRange, endRange);
     }
-
-}
-
-void printList(char a[30][100], int size) {
-    for (int i = 0; i < size; ++i) {
-        printf("\n%d. ", a[i]);
-    }
-}
-
-// -------> Validation functions
-
-bool isValidDate(char date[]) {
-
-    int dd;
-    int mm;
-    int yy;
-
-    //check year
-    if (yy >= 1900 && yy <= 9999) {
-        //check month
-        if (mm >= 1 && mm <= 12) {
-            //check days
-            if ((dd >= 1 && dd <= 31) && (mm == 1 || mm == 3 || mm == 5 || mm == 7 || mm == 8 || mm == 10 || mm == 12))
-                return true;
-            else if ((dd >= 1 && dd <= 30) && (mm == 4 || mm == 6 || mm == 9 || mm == 11))
-                return true;
-            else if ((dd >= 1 && dd <= 28) && (mm == 2))
-                return true;
-            else if (dd == 29 && mm == 2 && (yy % 400 == 0 || (yy % 4 == 0 && yy % 100 != 0)))
-                return true;
-            else
-                return false;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
-}
-
-bool isValidEmailId(char mailId[50]) {
-
-    return true;
-}
-
-void convertToYYYYmmDD(char *date) {
-    // given dd/mm/yyyy
 
 }
 
@@ -929,9 +961,14 @@ int takeYesOrNo() {
     fflush(stdin);
     char c = getchar();
     if (c == 'y' || c == 'n') {
-        return 1;
+        if (c == 'y') return 1;
+        return 0;
     } else {
         printf(INVALID_INPUT);
         return takeYesOrNo();
     }
 }
+
+
+
+

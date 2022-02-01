@@ -55,8 +55,6 @@ struct Client {
 extern const int PROJECT_STATUS_IDLE;
 extern const int PROJECT_STATUS_COMPLETED;
 extern const int PROJECT_STATUS_PROGRESS;
-extern const int PROJECT_BILLED;
-extern const int PROJECT_NOT_BILLED;
 
 extern const int EMP_STATUS_IDLE;
 extern const int EMP_STATUS_HAVE_PROJECT;
@@ -138,15 +136,15 @@ extern struct Login currentUser;
 
 // SINGLE LINE PRINTING
 
-void printSingleLineProject(struct Project project);
+void printSingleLineProject(struct Project project, int number);
 
-void printSingleLineEmployee(struct Employee employee);
+void printSingleLineEmployee(struct Employee employee, int number);
 
-void printSingleLineMember(struct Member member);
+void printSingleLineMember(struct Member member, int number);
 
-void printSingleLineLogin(struct Login login);
+void printSingleLineLogin(struct Login login, int number);
 
-void printSingleLineClient(struct Client client);
+void printSingleLineClient(struct Client client, int number);
 
 // -------> COLUMNS PRINTING
 
@@ -174,13 +172,21 @@ void updateClientFile();
 
 void initialLoading();
 
+// get id for table
+
+int getIdOfProjectTable();
+
+int getIdOfEmployeeTable();
+
+int getIdOfClientTable();
+
 // -------> REPORTS WORK
 
-void displayEmployeesByWorkStatus(int STATUS);
+void displayEmployeesByWorkStatus(int STATUS, struct Employee array[]);
 
-int displayProjectsByProgressStatus(int STATUS);
+void displayProjectsByProgressStatus(int STATUS,  struct Project array[]);
 
-void displayAllProjects();
+void displayAllProjects( struct Project array[]);
 
 void displayAllEmployees();
 
@@ -192,7 +198,7 @@ void displayClientByProjectId(int projectId);
 
 int showAllManagersCustom();
 
-void displayEmployeesByDesignation(int designation);
+void displayEmployeesByDesignation(int designation,  struct Employee array[]);
 
 void displayAllClients();
 
@@ -216,36 +222,22 @@ struct Project getProjectById(int projectId);
 
 // -------------> Print ALL Data for testing
 
-void testPrintClients();
-
-void testPrintEmployees();
-
-void testPrintMembers();
-
-void testPrintProjects();
-
-void testPrintLogins();
-
-void testPrintRowsSize();
-
-void performDatabaseTesting();
-
-void simpleTest();
+void startTestingForFiles();
 
 // --------> INPUT EASE
 
-int inputTakeInt(int startRange, int endRange);
+int takeInputInteger(int startRange, int endRange);
 
 void printList(char a[30][100], int size);
 
 // -------> Validation functions
 
-bool isValidDate(int dd, int mm, int yy);
-
-bool isValidEmailId(char mailId[50]);
-
 void takeInputString(char *string, int minLength, int maxLength);
 
 int takeYesOrNo();
+
+void changeProjectStatusToIdle(int projectId);
+
+void resetDatabase();
 
 #endif //UNTITLED_ADBHELPER_H

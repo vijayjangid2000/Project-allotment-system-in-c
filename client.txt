@@ -4,3 +4,4 @@
 4|Vikas|Nike|8952014440|vikas@gmail.com|4
 5|Suresh|Tata|9000800021|suresh@gmail.com|5
 6|Ram|Jio|8000900021|ram@gmail.com|6
+7|hekko|heekoo|8908900101|jangid@mgial.com|8
