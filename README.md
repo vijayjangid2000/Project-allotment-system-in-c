@@ -1,4 +1,4 @@
-# Project-allotment-system-in-c
+# Project allotment system
 C Project. Project Allotment System.
 
 Login:
